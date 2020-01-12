@@ -3,6 +3,8 @@ package task2;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -10,6 +12,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 import task2.HashClass;
 
@@ -22,8 +25,11 @@ public class RegistrationController implements Initializable {
 	@FXML private TextField country_field;
 	@FXML private TextField email_field;
 	@FXML private TextField number_field;
-	@FXML private TextField business_field;
+	//@FXML private TextField business_field;
 	@FXML private Button submit_button;
+	@FXML private ComboBox<String> business_field;
+		private ObservableList<String> food_list;
+	
 	
 	
 	public void submit() {
@@ -34,7 +40,6 @@ public class RegistrationController implements Initializable {
 		String country = country_field.getText();
 		String email = email_field.getText();
 		String number = number_field.getText();
-		String business = business_field.getText();
 		
 		//verifying the format of number field
         if(!number.matches("\\d*")) {
@@ -46,7 +51,7 @@ public class RegistrationController implements Initializable {
         
       //verifying full fields
         if(username.length() == 0 || password.length() == 0 || companyName.length() == 0 || address.length() == 0 || 
-        		country.length() == 0 || email.length() == 0 || number.length() == 0 || business.length() == 0) {
+        		country.length() == 0 || email.length() == 0 || number.length() == 0 /*|| business.length() == 0*/) {
         	
         	Alert windowAlert = new Alert(AlertType.INFORMATION);
 			windowAlert.setHeaderText("Please fill all the fields");
@@ -58,11 +63,11 @@ public class RegistrationController implements Initializable {
         
         password = HashClass.convertToSha(password);
         
-      //verifying that the new user is not already registered
+        //verifying that the new user is not already registered
         boolean result = false;
         
-       //funzione che controlla l'esistenza dell'account
-        result = MongoHandler.checkCredential(username, password);
+        //funzione che controlla l'esistenza dell'account
+        result = MongoHandler.checkUserCredential(username, password);
         
         if(result == true) {
         	username_field.clear();
@@ -75,7 +80,7 @@ public class RegistrationController implements Initializable {
         	return;
         }else {
         	//inserimento del nuovo account nel database
-        	User u = new User(username, password, companyName, address, country, email, number, business);
+        	User u = new User(username, password, companyName, address, country, email, number, "riso");
         	
         	MongoHandler.insertUser(u);
         	
@@ -88,6 +93,7 @@ public class RegistrationController implements Initializable {
 
 	@Override
 	 public void initialize(URL url, ResourceBundle rb) {
-	
+		food_list = FXCollections.observableList(MongoHandler.getFood());
+		business_field.setItems(food_list);
 	}
 }

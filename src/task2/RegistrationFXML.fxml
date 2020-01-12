@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
@@ -14,50 +15,46 @@
             <Font name="Maiandra GD" size="24.0" />
          </font>
       </Label>
-      <Button fx:id="submit_button" layoutX="135.0" layoutY="421.0" mnemonicParsing="false" onAction="#submit" style="-fx-background-color: #eaa822;" text="Submit" textFill="WHITE">
+      <Button fx:id="submit_button" layoutX="146.0" layoutY="421.0" mnemonicParsing="false" onAction="#submit" style="-fx-background-color: #eaa822;" text="Submit" textFill="WHITE">
          <font>
             <Font size="17.0" />
          </font>
       </Button>
-      <PasswordField fx:id="password_field" alignment="CENTER" layoutX="82.0" layoutY="110.0" promptText="Password">
+      <PasswordField fx:id="password_field" alignment="CENTER" layoutX="95.0" layoutY="109.0" promptText="Password">
          <font>
             <Font size="15.0" />
          </font>
       </PasswordField>
-      <TextField fx:id="username_field" alignment="CENTER" layoutX="82.0" layoutY="68.0" promptText="Username">
+      <TextField fx:id="username_field" alignment="CENTER" layoutX="95.0" layoutY="68.0" promptText="Username">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="companyName_field" alignment="CENTER" layoutX="82.0" layoutY="151.0" promptText="Company Name">
+      <TextField fx:id="companyName_field" alignment="CENTER" layoutX="95.0" layoutY="150.0" promptText="Company Name">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="country_field" alignment="CENTER" layoutX="82.0" layoutY="235.0" promptText="Country">
+      <TextField fx:id="country_field" alignment="CENTER" layoutX="95.0" layoutY="232.0" promptText="Country">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="email_field" alignment="CENTER" layoutX="82.0" layoutY="276.0" promptText="Email">
+      <TextField fx:id="email_field" alignment="CENTER" layoutX="95.0" layoutY="273.0" promptText="Email">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="number_field" alignment="CENTER" layoutX="82.0" layoutY="317.0" promptText="Telephone number">
+      <TextField fx:id="number_field" alignment="CENTER" layoutX="95.0" layoutY="314.0" promptText="Telephone number">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="business_field" alignment="CENTER" layoutX="82.0" layoutY="358.0" promptText="Core business">
+      <TextField fx:id="address_field" alignment="CENTER" layoutX="95.0" layoutY="191.0" promptText="Address">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="address_field" alignment="CENTER" layoutX="82.0" layoutY="191.0" promptText="Address">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </TextField>
+      <ComboBox fx:id="business_field" layoutX="95.0" layoutY="354.0" prefHeight="40.0" prefWidth="186.0" promptText="Core Business" style="-fx-background-color: white;" />
    </children>
 </Pane>

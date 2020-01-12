@@ -43,7 +43,12 @@ public class MongoHandler {
 		mongoClient.close();
 	}
 
-	public static boolean checkCredential(String username, String pwd){
+	
+	/*
+	 * USER FUNCTIONS
+	 */
+	
+	public static boolean checkUserCredential(String username, String pwd){
 		collection = db.getCollection("users");
 		MongoCursor<Document> cursor = collection.find().iterator();
 
@@ -51,7 +56,7 @@ public class MongoHandler {
 		try {
 			while (cursor.hasNext()) {
 				user = new JSONObject(cursor.next().toJson());
-				System.out.println(user);
+				//System.out.println(user);
 				if(user.get("username").equals(username) && user.get("password").equals(pwd)) {
 					return true;
 				}
@@ -78,4 +83,29 @@ public class MongoHandler {
 		
 		collection.insertOne(doc);
 	}
+	
+	/*
+	 * FOOD FUNCTIONS
+	 */
+	
+	public static List<String> getFood(){
+		collection = db.getCollection("dataModelArrAvg");
+		
+		MongoCursor<Document> cursor = collection.find().iterator();
+
+		JSONObject food;		
+		List<String> food_list = new ArrayList<String>();
+		try {
+			while (cursor.hasNext()) {
+				food = new JSONObject(cursor.next().toJson());
+				//System.out.println(food.get("name"));
+				food_list.add((String) food.get("name"));
+			}
+		} finally {
+			cursor.close();
+		}
+		return food_list;
+	}
+	
+	
 }

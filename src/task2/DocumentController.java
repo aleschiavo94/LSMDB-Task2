@@ -34,6 +34,10 @@ public class DocumentController implements Initializable {
 	@FXML private ComboBox<String> continent_comboBox;
 		private ObservableList<String> continent_list;
 		
+	//food combobox
+	@FXML private ComboBox<String> food_comboBox;
+		private ObservableList<String> food_list;
+		
 	//radio button 
 	@FXML RadioButton rb_production;
 	@FXML RadioButton rb_import;
@@ -130,11 +134,11 @@ public class DocumentController implements Initializable {
 		//filling the continent combobox
 		continent_list = FXCollections.observableArrayList("World", 
 				"Africa", "Americas", "Asia", "Europe", "Oceania");
-
 		continent_comboBox.setItems(continent_list);
 		
 		//filling food combobox
-		
+		food_list = FXCollections.observableList(MongoHandler.getFood());
+		food_comboBox.setItems(food_list);
 		
 		//creating the toggle group
 		group = new ToggleGroup();
