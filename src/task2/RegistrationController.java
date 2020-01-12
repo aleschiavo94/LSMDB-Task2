@@ -1,8 +1,6 @@
 package task2;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.collections.ObservableList;
@@ -101,9 +99,7 @@ public class RegistrationController implements Initializable {
 
 	@Override
 	 public void initialize(URL url, ResourceBundle rb) {
-		List<String> food = new ArrayList<String>();
-		food.addAll(MongoHandler.getFood());
-		food_list.addAll(food);
+		food_list.addAll(MongoHandler.getFood());
 		business_field.setItems(food_list);
 	}
 }
