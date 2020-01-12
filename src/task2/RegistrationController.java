@@ -25,7 +25,6 @@ public class RegistrationController implements Initializable {
 	@FXML private TextField country_field;
 	@FXML private TextField email_field;
 	@FXML private TextField number_field;
-	//@FXML private TextField business_field;
 	@FXML private Button submit_button;
 	@FXML private ComboBox<String> business_field;
 		private ObservableList<String> food_list;
@@ -67,9 +66,9 @@ public class RegistrationController implements Initializable {
         boolean result = false;
         
         //funzione che controlla l'esistenza dell'account
-        result = MongoHandler.checkUserCredential(username, password);
+        User us = MongoHandler.checkUserCredential(username, password);
         
-        if(result == true) {
+        if(us != null) {
         	username_field.clear();
         	password_field.clear();
         	

@@ -26,6 +26,17 @@ public class User {
 		this.coreBusiness = coreBusiness;
 	}
 	
+	public User(User u) {
+		this.username = u.username;
+		this.password = u.password;
+		this.companyName = u.companyName;
+		this.address = u.address;
+		this.country = u.country;
+		this.email = u.email;
+		this.number = u.number;
+		this.coreBusiness = u.coreBusiness;
+	}
+	
 	public String getUsername() {
 		return username;
 	}

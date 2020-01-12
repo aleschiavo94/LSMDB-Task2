@@ -23,7 +23,7 @@ public class LoginController implements Initializable {
 	@FXML private TextField password_field;
 		
 		
-	public void login(ActionEvent event) {
+	public void login(ActionEvent event) throws IOException {
 		String username = username_field.getText();
 		String password = password_field.getText();
 		
@@ -31,10 +31,10 @@ public class LoginController implements Initializable {
 		
 		boolean found = true;
 		
-		//ricerca nel database delle credenziali
-		found = MongoHandler.checkUserCredential(username, password);
+		//searching for credentials
+		User u = MongoHandler.checkUserCredential(username, password);
 		
-		if(found == true) {
+		if(u != null) {
 			//closing the window
 			Stage oldStage = new Stage();
             Node source = (Node) event.getSource();
@@ -48,20 +48,18 @@ public class LoginController implements Initializable {
 	        String resource = "CompanyFXML.fxml";
 	        FXMLLoader loader = new FXMLLoader();
 	        loader.setLocation(getClass().getResource(resource));
+	        System.out.println("c");
+	        Parent root = (Parent) loader.load();
 	        
-	        Parent root;
-			try {
-				root = (Parent) loader.load();
-				scene = new Scene(root);
-		        dialogStage.setTitle("Company Account");
-		        dialogStage.initModality(Modality.WINDOW_MODAL);
-		        dialogStage.setScene(scene);
-		        dialogStage.show();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-	        		
 	        CompanyController controller = loader.getController();
+	        controller.initCompany(u);
+		        
+			scene = new Scene(root);
+	        dialogStage.setTitle("Company Account");
+	        dialogStage.initModality(Modality.WINDOW_MODAL);
+	        dialogStage.setScene(scene);
+		    dialogStage.show();
+			
 		}else {
 			username_field.clear();
 			password_field.clear();
