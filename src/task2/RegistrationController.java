@@ -45,7 +45,7 @@ public class RegistrationController implements Initializable {
 		}
         
       //verifying full fields
-        if(username.length() == 0 || password.length() == 0 || address.length() == 0 || 
+        if(username.length() == 0 || password.length() == 0 || companyName.length() == 0 || address.length() == 0 || 
         		country.length() == 0 || email.length() == 0 || number.length() == 0 || business.length() == 0) {
         	
         	Alert windowAlert = new Alert(AlertType.INFORMATION);
