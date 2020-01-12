@@ -32,6 +32,7 @@ public class LoginController implements Initializable {
 		boolean found = false;
 		
 		//ricerca nel database delle credenziali
+		found = MongoHandler.checkCredential(username, password);
 		
 		if(found == true) {
 			//closing the window

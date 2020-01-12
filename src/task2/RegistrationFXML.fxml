@@ -7,15 +7,14 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="350.0" style="-fx-background-image: url(&quot;login.jpg&quot;); -fx-background-size: contain;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="task2.RegistrationController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="350.0" style="-fx-background-image: url(&quot;login.jpg&quot;); -fx-background-size: contain;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="task2.RegistrationController">
    <children>
       <Label layoutX="51.0" layoutY="14.0" prefHeight="40.0" prefWidth="248.0" text="Fill the following fields" textFill="#f2a501">
          <font>
             <Font name="Maiandra GD" size="24.0" />
          </font>
       </Label>
-      <Button fx:id="submit_button" layoutX="136.0" layoutY="395.0" mnemonicParsing="false" onAction="#submit" style="-fx-background-color: #eaa822;" text="Submit" textFill="WHITE">
+      <Button fx:id="submit_button" layoutX="135.0" layoutY="421.0" mnemonicParsing="false" onAction="#submit" style="-fx-background-color: #eaa822;" text="Submit" textFill="WHITE">
          <font>
             <Font size="17.0" />
          </font>
@@ -30,27 +29,32 @@
             <Font size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="address_field" alignment="CENTER" layoutX="82.0" layoutY="151.0" promptText="Address">
+      <TextField fx:id="companyName_field" alignment="CENTER" layoutX="82.0" layoutY="151.0" promptText="Company Name">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="country_field" alignment="CENTER" layoutX="82.0" layoutY="191.0" promptText="Country">
+      <TextField fx:id="country_field" alignment="CENTER" layoutX="82.0" layoutY="235.0" promptText="Country">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="email_field" alignment="CENTER" layoutX="82.0" layoutY="235.0" promptText="Email">
+      <TextField fx:id="email_field" alignment="CENTER" layoutX="82.0" layoutY="276.0" promptText="Email">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="number_field" alignment="CENTER" layoutX="82.0" layoutY="278.0" promptText="Telephone number">
+      <TextField fx:id="number_field" alignment="CENTER" layoutX="82.0" layoutY="317.0" promptText="Telephone number">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="business_field" alignment="CENTER" layoutX="82.0" layoutY="321.0" promptText="Core business">
+      <TextField fx:id="business_field" alignment="CENTER" layoutX="82.0" layoutY="358.0" promptText="Core business">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="address_field1" alignment="CENTER" layoutX="82.0" layoutY="191.0" promptText="Address">
          <font>
             <Font size="15.0" />
          </font>

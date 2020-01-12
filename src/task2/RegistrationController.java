@@ -17,6 +17,7 @@ import task2.HashClass;
 public class RegistrationController implements Initializable {
 	@FXML private TextField username_field;
 	@FXML private PasswordField password_field;
+	@FXML private TextField companyName_field;
 	@FXML private TextField address_field;
 	@FXML private TextField country_field;
 	@FXML private TextField email_field;
@@ -28,6 +29,7 @@ public class RegistrationController implements Initializable {
 	public void submit() {
 		String username = username_field.getText();
 		String password = password_field.getText();
+		String companyName = companyName_field.getText();
 		String address = address_field.getText();
 		String country = country_field.getText();
 		String email = email_field.getText();
@@ -57,11 +59,12 @@ public class RegistrationController implements Initializable {
         password = HashClass.convertToSha(password);
         
       //verifying that the new user is not already registered
-        boolean result=false;
+        boolean result = false;
         
        //funzione che controlla l'esistenza dell'account
+        result = MongoHandler.checkCredential(username, password);
         
-        if(result == false) {
+        if(result == true) {
         	username_field.clear();
         	password_field.clear();
         	
@@ -72,6 +75,9 @@ public class RegistrationController implements Initializable {
         	return;
         }else {
         	//inserimento del nuovo account nel database
+        	User u = new User(username, password, companyName, address, country, email, number, business);
+        	
+        	MongoHandler.insertUser(u);
         	
         	//closing the window
         	Stage stage = (Stage) submit_button.getScene().getWindow();
