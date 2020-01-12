@@ -29,7 +29,7 @@ public class LoginController implements Initializable {
 		
 		password = HashClass.convertToSha(password);
 		
-		boolean found = false;
+		boolean found = true;
 		
 		//ricerca nel database delle credenziali
 		
