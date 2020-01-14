@@ -125,7 +125,7 @@ public class MongoHandler {
 		try {
 			while (cursor.hasNext()) {
 				food = new JSONObject(cursor.next().toJson());
-				//System.out.println(food.get("name"));
+//				System.out.println(food.get("countries.country_name"));
 				food_list.add((String) food.get("name"));
 			}
 		} finally {

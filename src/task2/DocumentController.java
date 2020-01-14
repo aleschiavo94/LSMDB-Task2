@@ -148,7 +148,7 @@ public class DocumentController implements Initializable {
 	 public void initialize(URL url, ResourceBundle rb) {
 		//filling the continent combobox
 		continent_list = FXCollections.observableArrayList("World", 
-				"Africa", "Americas", "Asia", "Europe", "Oceania");
+				"Africa", "North America", "South America", "Asia", "Europe", "Oceania");
 		continent_comboBox.setItems(continent_list);
 		
 		//filling food combobox
