@@ -3,7 +3,11 @@ package task2;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -43,7 +47,7 @@ public class DocumentController implements Initializable {
 	@FXML RadioButton rb_import;
 	@FXML RadioButton rb_export;
 		private ToggleGroup group;
-	
+			
 	
 	public void submit() {
 		//getting the values
@@ -129,6 +133,17 @@ public class DocumentController implements Initializable {
         LoginController controller = loader.getController();
 	}
 	
+	//Utility function used to fill the food combobox
+	private void setFoodList() {
+		System.out.println("start getFood()");
+		List<String> list_food = new ArrayList<String>();
+		list_food.addAll(MongoHandler.getFood());
+		System.out.println("end getFood()");
+		food_list = FXCollections.observableList(list_food);
+		food_comboBox.setItems(food_list);
+	}
+	
+	
 	@Override
 	 public void initialize(URL url, ResourceBundle rb) {
 		//filling the continent combobox
@@ -137,7 +152,9 @@ public class DocumentController implements Initializable {
 		continent_comboBox.setItems(continent_list);
 		
 		//filling food combobox
-		food_list = FXCollections.observableList(MongoHandler.getFood());
+		List<String> list = new ArrayList<String>();
+		list.add("Wait...");
+		food_list = FXCollections.observableList(list); //MongoHandler.getFood());
 		food_comboBox.setItems(food_list);
 		
 		//creating the toggle group
@@ -145,5 +162,16 @@ public class DocumentController implements Initializable {
 		rb_production.setToggleGroup(group);
 		rb_import.setToggleGroup(group);
 		rb_export.setToggleGroup(group);
+		
+		//thread to filling the food combobox without waiting at startup
+		new Thread(() -> {
+	        try {
+	            Thread.sleep(10);
+	            setFoodList();
+	        }
+	        catch (Exception e){
+	            System.err.println(e);
+	        }
+	    }).start();
 	 } 
 }

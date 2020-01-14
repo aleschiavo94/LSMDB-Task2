@@ -58,7 +58,30 @@ public class MongoHandler {
 				user = new JSONObject(cursor.next().toJson());
 				//System.out.println(user);
 				if(user.get("username").equals(username) && user.get("password").equals(pwd)) {
-					User u=new User(user.get("username").toString(), user.get("password").toString(), 
+					User u = new User(user.get("username").toString(), user.get("password").toString(), 
+							user.get("company_name").toString(), user.get("address").toString(), 
+							user.get("country").toString(), user.get("email").toString(), 
+							user.get("number").toString(), user.get("core_business").toString());
+					return u;
+				}
+			}
+		} finally {
+			cursor.close();
+		}
+		return null;
+	}
+	
+	public static User getUserByUsername(String username) {
+		collection = db.getCollection("users");
+		MongoCursor<Document> cursor = collection.find().iterator();
+
+		JSONObject user;
+		try {
+			while (cursor.hasNext()) {
+				user = new JSONObject(cursor.next().toJson());
+				//System.out.println(user);
+				if(user.get("username").equals(username)) {
+					User u = new User(user.get("username").toString(), user.get("password").toString(), 
 							user.get("company_name").toString(), user.get("address").toString(), 
 							user.get("country").toString(), user.get("email").toString(), 
 							user.get("number").toString(), user.get("core_business").toString());

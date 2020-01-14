@@ -28,8 +28,8 @@ public class CompanyController implements Initializable {
 	@FXML private Label business_field;
 	
 	public void initCompany(User u) {
-		System.out.println(u.getUsername());
-		this.current_company=new User(u);
+		this.current_company = new User(u);
+		showCompanyInformation(this.current_company);
 	}
 	
 	public void logout(ActionEvent event) throws IOException {
@@ -41,11 +41,11 @@ public class CompanyController implements Initializable {
          String resource;
          Parent root;
          
-         resource = "DocumentFXML.fxml";
+        resource = "DocumentFXML.fxml";
      	FXMLLoader loader = new FXMLLoader();
-         loader.setLocation(getClass().getResource(resource));
+        loader.setLocation(getClass().getResource(resource));
        
-         root = (Parent) loader.load();
+        root = (Parent) loader.load();
         		
         DocumentController controller = loader.getController();
         
@@ -54,9 +54,8 @@ public class CompanyController implements Initializable {
         dialogStage.setScene(scene);
         dialogStage.show(); 
 	}
-
-	@Override
-	 public void initialize(URL url, ResourceBundle rb) {
+	
+	public void showCompanyInformation(User u) {
 		username_field.setText(current_company.getUsername());
 		password_field.setText(current_company.getPassword());
 		company_field.setText(current_company.getCompanyName());
@@ -65,5 +64,10 @@ public class CompanyController implements Initializable {
 		email_field.setText(current_company.getEmail());
 		number_field.setText(current_company.getNumber());
 		business_field.setText(current_company.getCoreBusiness());
+	}
+
+	@Override
+	 public void initialize(URL url, ResourceBundle rb) {
+		
 	}
 }

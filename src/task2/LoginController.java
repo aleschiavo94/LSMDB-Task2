@@ -29,10 +29,10 @@ public class LoginController implements Initializable {
 		
 		password = HashClass.convertToSha(password);
 		
-		boolean found = true;
+		User u;
 		
 		//searching for credentials
-		User u = MongoHandler.checkUserCredential(username, password);
+		u = MongoHandler.checkUserCredential(username, password);
 		
 		if(u != null) {
 			//closing the window
@@ -48,7 +48,6 @@ public class LoginController implements Initializable {
 	        String resource = "CompanyFXML.fxml";
 	        FXMLLoader loader = new FXMLLoader();
 	        loader.setLocation(getClass().getResource(resource));
-	        System.out.println("c");
 	        Parent root = (Parent) loader.load();
 	        
 	        CompanyController controller = loader.getController();

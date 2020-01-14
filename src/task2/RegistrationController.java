@@ -1,6 +1,8 @@
 package task2;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -63,12 +65,12 @@ public class RegistrationController implements Initializable {
         password = HashClass.convertToSha(password);
         
         //verifying that the new user is not already registered
-        boolean result = false;
+        User result;
         
         //funzione che controlla l'esistenza dell'account
-        User us = MongoHandler.checkUserCredential(username, password);
+        result = MongoHandler.checkUserCredential(username, password);
         
-        if(us != null) {
+        if(result != null) {
         	username_field.clear();
         	password_field.clear();
         	
@@ -78,8 +80,10 @@ public class RegistrationController implements Initializable {
         	password_field.setStyle("-fx-prompt-text-fill: red;");
         	return;
         }else {
+        	
+        	String business = business_field.getSelectionModel().getSelectedItem().toString();
         	//inserimento del nuovo account nel database
-        	User u = new User(username, password, companyName, address, country, email, number, "riso");
+        	User u = new User(username, password, companyName, address, country, email, number, business);
         	
         	MongoHandler.insertUser(u);
         	
@@ -89,10 +93,32 @@ public class RegistrationController implements Initializable {
         }
 	}
 	
+	//Utility function used to fill the food combobox
+	private void setFoodList() {
+		System.out.println("start getFood()");
+		List<String> list_food = new ArrayList<String>();
+		list_food.addAll(MongoHandler.getFood());
+		System.out.println("end getFood()");
+		food_list = FXCollections.observableList(list_food);
+		business_field.setItems(food_list);
+	}
 
 	@Override
 	 public void initialize(URL url, ResourceBundle rb) {
-		food_list = FXCollections.observableList(MongoHandler.getFood());
+		
+		List<String> list = new ArrayList<String>();
+		list.add("Wait...");
+		food_list = FXCollections.observableList(list); //MongoHandler.getFood());
 		business_field.setItems(food_list);
+		
+		new Thread(() -> {
+	        try {
+	            Thread.sleep(10);
+	            setFoodList();
+	        }
+	        catch (Exception e){
+	            System.err.println(e);
+	        }
+	    }).start();
 	}
 }
