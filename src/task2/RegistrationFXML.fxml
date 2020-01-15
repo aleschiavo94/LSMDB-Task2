@@ -20,17 +20,22 @@
             <Font size="17.0" />
          </font>
       </Button>
-      <PasswordField fx:id="password_field" alignment="CENTER" layoutX="95.0" layoutY="109.0" promptText="Password">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </PasswordField>
       <TextField fx:id="username_field" alignment="CENTER" layoutX="95.0" layoutY="68.0" promptText="Username">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
+      <PasswordField fx:id="password_field" alignment="CENTER" layoutX="95.0" layoutY="109.0" promptText="Password">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </PasswordField>
       <TextField fx:id="companyName_field" alignment="CENTER" layoutX="95.0" layoutY="150.0" promptText="Company Name">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="address_field" alignment="CENTER" layoutX="95.0" layoutY="191.0" promptText="Address">
          <font>
             <Font size="15.0" />
          </font>
@@ -46,11 +51,6 @@
          </font>
       </TextField>
       <TextField fx:id="number_field" alignment="CENTER" layoutX="95.0" layoutY="314.0" promptText="Telephone number">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </TextField>
-      <TextField fx:id="address_field" alignment="CENTER" layoutX="95.0" layoutY="191.0" promptText="Address">
          <font>
             <Font size="15.0" />
          </font>

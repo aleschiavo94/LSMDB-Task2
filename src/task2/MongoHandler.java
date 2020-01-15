@@ -94,6 +94,33 @@ public class MongoHandler {
 		return null;
 	}
 	
+	public static boolean changeInformation(User new_user) {
+		collection = db.getCollection("users");
+		MongoCursor<Document> cursor = collection.find().iterator();
+		
+		JSONObject user;
+		try {
+			while (cursor.hasNext()) {
+				user = new JSONObject(cursor.next().toJson());
+				//System.out.println(user);
+				if(user.get("username").equals(new_user.getUsername())) {
+					user.put("username", new_user.getUsername());
+					user.put("password", new_user.getPassword());
+					user.put("company_name", new_user.getCompanyName());
+					user.put("address", new_user.getAddress());
+					user.put("email", new_user.getEmail());
+					user.put("country", new_user.getCountry());
+					user.put("number", new_user.getNumber());
+					user.put("core_business", new_user.getCoreBusiness());
+					return true;
+				}
+			}
+		} finally {
+			cursor.close();
+		}
+		return false;
+	}
+	
 	public static void insertUser(User u){
 		collection = db.getCollection("users");
 		

@@ -41,6 +41,7 @@ public class RegistrationController implements Initializable {
 		String country = country_field.getText();
 		String email = email_field.getText();
 		String number = number_field.getText();
+		String business;
 		
 		//verifying the format of number field
         if(!number.matches("\\d*")) {
@@ -52,7 +53,7 @@ public class RegistrationController implements Initializable {
         
       //verifying full fields
         if(username.length() == 0 || password.length() == 0 || companyName.length() == 0 || address.length() == 0 || 
-        		country.length() == 0 || email.length() == 0 || number.length() == 0 /*|| business.length() == 0*/) {
+        		country.length() == 0 || email.length() == 0 || number.length() == 0 || business_field.getSelectionModel().isEmpty()) {
         	
         	Alert windowAlert = new Alert(AlertType.INFORMATION);
 			windowAlert.setHeaderText("Please fill all the fields");
@@ -62,13 +63,13 @@ public class RegistrationController implements Initializable {
             
         }
         
-        password = HashClass.convertToSha(password);
+        business= business_field.getSelectionModel().getSelectedItem().toString();
         
-        //verifying that the new user is not already registered
+
         User result;
         
-        //funzione che controlla l'esistenza dell'account
-        result = MongoHandler.checkUserCredential(username, password);
+        //checking whether the user is already signed up
+        result = MongoHandler.getUserByUsername(username);
         
         if(result != null) {
         	username_field.clear();
@@ -81,8 +82,9 @@ public class RegistrationController implements Initializable {
         	return;
         }else {
         	
-        	String business = business_field.getSelectionModel().getSelectedItem().toString();
-        	//inserimento del nuovo account nel database
+        	password = HashClass.convertToSha(password);
+        	
+        	//inserting the new account
         	User u = new User(username, password, companyName, address, country, email, number, business);
         	
         	MongoHandler.insertUser(u);
