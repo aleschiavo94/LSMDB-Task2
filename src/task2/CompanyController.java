@@ -41,18 +41,18 @@ public class CompanyController implements Initializable {
          String resource;
          Parent root;
          
-        resource = "DocumentFXML.fxml";
-     	FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(resource));
-       
-        root = (Parent) loader.load();
-        		
-        DocumentController controller = loader.getController();
-        
-        scene = new Scene(root);
-        dialogStage.setTitle("World food distribution");
-        dialogStage.setScene(scene);
-        dialogStage.show(); 
+//        resource = "DocumentFXML.fxml";
+//     	FXMLLoader loader = new FXMLLoader();
+//        loader.setLocation(getClass().getResource(resource));
+//       
+//        root = (Parent) loader.load();
+//        		
+//        DocumentController controller = loader.getController();
+//        
+//        scene = new Scene(root);
+//        dialogStage.setTitle("World food distribution");
+//        dialogStage.setScene(scene);
+//        dialogStage.show(); 
 	}
 	
 	public void showCompanyInformation(User u) {

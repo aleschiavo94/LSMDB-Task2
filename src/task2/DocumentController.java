@@ -47,14 +47,24 @@ public class DocumentController implements Initializable {
 	@FXML RadioButton rb_import;
 	@FXML RadioButton rb_export;
 		private ToggleGroup group;
+		
+		private String food_selected = null;
+		private String region_selected = null;
+		private String radio_selected = null;
 			
 	
-	public void submit() {
+	public void submit() throws IOException{
 		//getting the values
+		food_selected = food_comboBox.getSelectionModel().getSelectedItem().toString();
+		region_selected = continent_comboBox.getSelectionModel().getSelectedItem().toString();
+		RadioButton selected = (RadioButton)group.getSelectedToggle();
+		radio_selected = selected.getText();
 		start_period = start_date.getValue();
 		end_period = end_date.getValue();
 		
 		//cleaning the fields
+		food_comboBox.getEditor().clear();
+		continent_comboBox.getEditor().clear();
 		start_date.getEditor().clear();
 		end_date.getEditor().clear();
 		
@@ -69,18 +79,17 @@ public class DocumentController implements Initializable {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(resource));
         
-        Parent root;
-		try {
-			root = (Parent) loader.load();
-			scene = new Scene(root);
-	        dialogStage.setTitle("Analysis result");
-	        dialogStage.setScene(scene);
-	        dialogStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        		
+        Parent root = (Parent) loader.load();
+        
         ResultController controller = loader.getController();
+        controller.initResult(food_selected, region_selected, radio_selected, start_period, end_period);
+        
+		scene = new Scene(root);
+        dialogStage.setTitle("Analysis result");
+        dialogStage.setScene(scene);
+        dialogStage.show();
+        		
+        //ResultController controller = loader.getController();
               
          
 	}
