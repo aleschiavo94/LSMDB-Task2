@@ -6,14 +6,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class User {
-	String username;
-	String password;
-	String companyName;
-	String address;
-	String country;
-	String email;
-	String number;
-	String coreBusiness;
+	private String username;
+	private String password;
+	private String companyName;
+	private String address;
+	private String country;
+	private String email;
+	private String number;
+	private String coreBusiness;
 	
 	public User(String username, String password, String companyName, String address, String country, String email, String number, String coreBusiness) {
 		this.username = username;
@@ -68,9 +68,38 @@ public class User {
     	return this.coreBusiness;
     }
     
-    public void setPassword(String psw){
-        this.password = psw;
+    
+    public void setUsername(String username) {
+		this.username=username;
+	}
+	
+	public void setPassword(String pwd) {
+		this.password=pwd;
+	}
+    
+    public void setCompanyName(String name) {
+    	this.companyName=name;
     }
+    
+    public void setAddress(String add) {
+    	this.address=add;
+    }
+    
+    public void setEmail(String e) {
+    	this.email=e;
+    }
+    
+    public void setCountry(String c) {
+    	this.country=c;
+    }
+    
+    public void setNumber(String num) {
+    	this.number=num;
+    }
+    public void setCoreBusiness(String core) {
+    	this.coreBusiness=core;
+    }
+    
 	
 	public JSONObject toJson() {
 		JSONObject json = new JSONObject();
