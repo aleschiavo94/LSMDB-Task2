@@ -3,20 +3,27 @@ package task2;
 import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.nio.file.DirectoryStream.Filter;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.UnwindOptions;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.UpdateResult;
@@ -134,5 +141,47 @@ public class MongoHandler {
 		return food_list;
 	}
 	
+	public static void getQueryResult(String food, String region, String country, String aim, String start, String end) {
+		collection = db.getCollection("dataModelArrAvg");
+		
+		if(country == null && region != null) {
+			MongoCursor<Document> cursor = collection.aggregate(
+				      Arrays.asList(
+				              Aggregates.match(Filters.and(Filters.eq("name", food), 
+				            		  Filters.eq("countries.country_region",region) 
+//				            		  Filters.gte("countries.years.year", start) 
+//				            		  Filters.lte("countries.years.year", end)
+				            		  ))
+				      )
+			).iterator();
+			try {
+				while (cursor.hasNext()) {
+					System.out.println(cursor.next().toJson());
+				}
+			} finally {
+				cursor.close();
+			}
+		}
+		else {
+			MongoCursor<Document> cursor = collection.aggregate(
+				      Arrays.asList(
+				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
+				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
+				              Aggregates.match(Filters.and(Filters.eq("name", food), 
+				            		  Filters.eq("countries.country_name",country), 
+				            		  Filters.gte("countries.years.year", start),
+				            		  Filters.lte("countries.years.year", end)
+				            		  ))
+				      )
+			).iterator();
+			try {
+				while (cursor.hasNext()) {
+					System.out.println(cursor.next().toJson());
+				}
+			} finally {
+				cursor.close();
+			}
+		}
+	}
 	
 }
