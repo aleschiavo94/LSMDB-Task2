@@ -2,8 +2,11 @@ package task2;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,9 +36,11 @@ public class ChangesController implements Initializable{
 	@FXML private ComboBox<String> business_field;
 		private ObservableList<String> food_list;
 		
+		private String old_username = null;
 		
 	public void initUser(User u) {
 		this.current_user=new User(u);
+		this.old_username = this.current_user.getUsername();
 	}
 	
 	public void update() throws IOException {
@@ -57,42 +62,41 @@ public class ChangesController implements Initializable{
 	        	return;
 			}
 	        
-	        User new_user=new User(current_user);
+	        User new_user = new User(current_user);
 	        
-	      //verifying full fields
+	        //verifying full fields
 	        if(username.length() != 0) {
 	        	new_user.setUsername(username);
 	        }
-	        else if(password.length() != 0) {
+	        if(password.length() != 0) {
 	        	new_user.setPassword(password);
 	        }
-	        else if(companyName.length() != 0) {
+	        if(companyName.length() != 0) {
 	        	new_user.setCompanyName(companyName);
 	        }
-	        else if(address.length() != 0) {
+	        if(address.length() != 0) {
 	        	new_user.setAddress(address);
 	        }
-	        else if(country.length() != 0) {
+	        if(country.length() != 0) {
 	        	new_user.setCountry(country);
 	        }
-	        else if(email.length() != 0) {
+	        if(email.length() != 0) {
 	        	new_user.setEmail(email);
 	        }
-	        else if(number.length() != 0) {
+	        if(number.length() != 0) {
 	        	new_user.setNumber(number);
 	        }
-	        else if(!business_field.getSelectionModel().isEmpty()) {
+	        if(!business_field.getSelectionModel().isEmpty()) {
 	        	new_user.setCoreBusiness(business_field.getSelectionModel().getSelectedItem().toString());
 	        }
-	        
-	       	
-	        MongoHandler.changeInformation(new_user);
+	        	       	
+	        MongoHandler.changeInformation(new_user, old_username);
 	        
 	        //closing the window
 	       	Stage stage = (Stage) update_button.getScene().getWindow();
 	       	stage.close();
 	       	
-	      //opening a new window with a new controller
+	       	//opening a new window with a new controller
 	        Stage dialogStage = new Stage();
 	        Scene scene;
 	        
@@ -102,7 +106,7 @@ public class ChangesController implements Initializable{
 	        Parent root = (Parent) loader.load();
 	        
 	        CompanyController controller = loader.getController();
-	        controller.initCompany(current_user);
+	        controller.initCompany(new_user);
 		        
 			scene = new Scene(root);
 	        dialogStage.setTitle("Company Account");
@@ -112,8 +116,25 @@ public class ChangesController implements Initializable{
 	        
 		}
 	
+	private void setFoodList() {
+		System.out.println("start getFood()");
+		List<String> list_food = new ArrayList<String>();
+		list_food.addAll(MongoHandler.getFood());
+		System.out.println("end getFood()");
+		food_list = FXCollections.observableList(list_food);
+		business_field.setItems(food_list);
+	}
+	
 	@Override
 	 public void initialize(URL url, ResourceBundle rb) {
-		
+		new Thread(() -> {
+	        try {
+	            Thread.sleep(10);
+	            setFoodList();
+	        }
+	        catch (Exception e){
+	            System.err.println(e);
+	        }
+	    }).start();
 	}
 }

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.json.JSONObject;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,11 +31,15 @@ public class CompanyController implements Initializable {
 	@FXML private Label business_field;
 	@FXML private Button logout_button;
 	@FXML private Button modify_button;
-	
+
 	
 	public void initCompany(User u) {
 		this.current_company = new User(u);
 		showCompanyInformation(this.current_company);
+	}
+	
+	public void fileChooser() {
+		System.out.println("ciao");
 	}
 	
 	public void showCompanyInformation(User u) {
@@ -80,11 +86,6 @@ public class CompanyController implements Initializable {
         		
        ChangesController controller = loader.getController();
        controller.initUser(current_company);
-	}
-	
-	
-	public void fileChooser() {
-		System.out.println("ciao");
 	}
 	
 

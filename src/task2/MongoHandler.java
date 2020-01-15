@@ -54,28 +54,22 @@ public class MongoHandler {
 	/*
 	 * USER FUNCTIONS
 	 */
-	
 	public static User checkUserCredential(String username, String pwd){
 		collection = db.getCollection("users");
 		MongoCursor<Document> cursor = collection.find().iterator();
 
 		JSONObject user;
-		try {
-			while (cursor.hasNext()) {
-				user = new JSONObject(cursor.next().toJson());
-				//System.out.println(user);
-				if(user.get("username").equals(username) && user.get("password").equals(pwd)) {
-					User u = new User(user.get("username").toString(), user.get("password").toString(), 
-							user.get("company_name").toString(), user.get("address").toString(), 
-							user.get("country").toString(), user.get("email").toString(), 
-							user.get("number").toString(), user.get("core_business").toString());
-					return u;
-				}
-			}
-		} finally {
-			cursor.close();
+		Document document = collection.find(Filters.and(Filters.eq("username", username), Filters.eq("password", pwd))).first();
+		if (document == null) {
+			return null;
+		} else {
+			user = new JSONObject(document.toJson());
+			User u = new User(user.get("username").toString(), user.get("password").toString(), 
+					user.get("company_name").toString(), user.get("address").toString(), 
+					user.get("country").toString(), user.get("email").toString(), 
+					user.get("number").toString(), user.get("core_business").toString());
+			return u;
 		}
-		return null;
 	}
 	
 	public static User getUserByUsername(String username) {
@@ -83,49 +77,35 @@ public class MongoHandler {
 		MongoCursor<Document> cursor = collection.find().iterator();
 
 		JSONObject user;
-		try {
-			while (cursor.hasNext()) {
-				user = new JSONObject(cursor.next().toJson());
-				//System.out.println(user);
-				if(user.get("username").equals(username)) {
-					User u = new User(user.get("username").toString(), user.get("password").toString(), 
-							user.get("company_name").toString(), user.get("address").toString(), 
-							user.get("country").toString(), user.get("email").toString(), 
-							user.get("number").toString(), user.get("core_business").toString());
-					return u;
-				}
-			}
-		} finally {
-			cursor.close();
+		Document document = collection.find(Filters.eq("username", username)).first();
+		if (document == null) {
+			return null;
+		} else {
+			user = new JSONObject(document.toJson());
+			User u = new User(user.get("username").toString(), user.get("password").toString(), 
+					user.get("company_name").toString(), user.get("address").toString(), 
+					user.get("country").toString(), user.get("email").toString(), 
+					user.get("number").toString(), user.get("core_business").toString());
+			return u;
 		}
-		return null;
 	}
 	
-	public static boolean changeInformation(User new_user) {
-		collection = db.getCollection("users");
-		MongoCursor<Document> cursor = collection.find().iterator();
+	public static void changeInformation(User new_user, String old_username) {
 		
-		JSONObject user;
-		try {
-			while (cursor.hasNext()) {
-				user = new JSONObject(cursor.next().toJson());
-				//System.out.println(user);
-				if(user.get("username").equals(new_user.getUsername())) {
-					user.put("username", new_user.getUsername());
-					user.put("password", new_user.getPassword());
-					user.put("company_name", new_user.getCompanyName());
-					user.put("address", new_user.getAddress());
-					user.put("email", new_user.getEmail());
-					user.put("country", new_user.getCountry());
-					user.put("number", new_user.getNumber());
-					user.put("core_business", new_user.getCoreBusiness());
-					return true;
-				}
-			}
-		} finally {
-			cursor.close();
-		}
-		return false;
+		collection = db.getCollection("users");
+		Document query = new Document("username", new_user.getUsername())
+					.append("password", new_user.getPassword())
+					.append("company_name", new_user.getCompanyName())
+					.append("address", new_user.getAddress())
+					.append("email", new_user.getEmail())
+					.append("country", new_user.getCountry())
+					.append("number", new_user.getNumber())
+					.append("core_business", new_user.getCoreBusiness());
+		
+		Document updateQuery = new Document("$set", query);
+													
+		UpdateResult result = collection.updateOne(Filters.eq("username", old_username), updateQuery);
+		System.out.println(result.getModifiedCount());
 	}
 	
 	public static void insertUser(User u){
@@ -196,8 +176,8 @@ public class MongoHandler {
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				              Aggregates.match(Filters.and(Filters.eq("name", food), 
 				            		  Filters.eq("countries.country_name",country), 
-				            		  Filters.gte("countries.years.year", start),
-				            		  Filters.lte("countries.years.year", end)
+				            		  new Document("countries.years.year", new Document("$gte", start).append("$lte", end))
+				            		  //Filters.lte("countries.years.year", end)
 				            		  ))
 				      )
 			).iterator();
