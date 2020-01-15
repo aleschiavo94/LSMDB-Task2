@@ -30,6 +30,7 @@ public class CompanyController implements Initializable {
 	@FXML private Button logout_button;
 	@FXML private Button modify_button;
 	
+	
 	public void initCompany(User u) {
 		this.current_company = new User(u);
 		showCompanyInformation(this.current_company);
@@ -79,6 +80,11 @@ public class CompanyController implements Initializable {
         		
        ChangesController controller = loader.getController();
        controller.initUser(current_company);
+	}
+	
+	
+	public void fileChooser() {
+		System.out.println("ciao");
 	}
 	
 
