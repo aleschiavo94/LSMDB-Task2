@@ -34,19 +34,19 @@ public class ResultController implements Initializable {
 			}
 			
 			if(aggregation.contentEquals("Average")) {
-				AvgImport = MongoHandler.getAverageProduction(food,region,country,start,end);
-				System.out.println(AvgProduction);
+				AvgImport = MongoHandler.getAverageImport(food,region,country,start,end);
+				System.out.println(AvgImport);
 			}
 		}
 		else if(aim.equals("Export")) {
 			if(aggregation.equals("Sum")) {
-				TotalExport = MongoHandler.getTotalProduction(food,region,country,start,end);
-				System.out.println(TotalProduction);
+				TotalExport = MongoHandler.getTotalExport(food,region,country,start,end);
+				System.out.println(TotalExport);
 			}
 			
 			if(aggregation.contentEquals("Average")) {
-				AvgExport = MongoHandler.getAverageProduction(food,region,country,start,end);
-				System.out.println(AvgProduction);
+				AvgExport = MongoHandler.getAverageExport(food,region,country,start,end);
+				System.out.println(AvgExport);
 			}
 		}
 	}

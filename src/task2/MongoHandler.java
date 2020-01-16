@@ -167,14 +167,16 @@ public class MongoHandler {
 		collection = db.getCollection("dataModelArrAvg");
 		
 		Map<String, Object> multiIdMap = new HashMap<String, Object>();
+		AggregateIterable<Document> documents;
+		Document groupFields;
 				
 		if(country == null && region != null) {
 			multiIdMap.put("Region", "$countries.region");
 			multiIdMap.put("Food", "$name");
 
-			Document groupFields = new Document(multiIdMap);
+			groupFields = new Document(multiIdMap);
 			
-			AggregateIterable<Document> documents = (AggregateIterable<Document>) collection.aggregate(
+			documents = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
@@ -188,18 +190,14 @@ public class MongoHandler {
 		                      )
 				      )
 			);
-			List<Document> docs = intoList(documents);
-			return Integer.parseInt(docs.get(0).get("TotalProduction").toString());
-			
 		}
 		else {
 			multiIdMap.put("Country", "$countries.country_name");
 			multiIdMap.put("Food", "$name");
 
-			Document groupFields = new Document(multiIdMap);
+			groupFields = new Document(multiIdMap);
 			
-			//MongoCursor<Document> cursor = 
-			AggregateIterable<Document> documents = collection.aggregate(
+			documents = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
@@ -213,25 +211,26 @@ public class MongoHandler {
 		                      )
 				      )
 			);
-			
-			List<Document> docs = intoList(documents);
-			return Integer.parseInt(docs.get(0).get("TotalProduction").toString());
-		
 		}
+			
+		List<Document> docs = intoList(documents);
+		return Integer.parseInt(docs.get(0).get("TotalProduction").toString());
 	}
 	
 	public static Double getAverageProduction(String food, String region, String country, String start, String end) {
 		collection = db.getCollection("dataModelArrAvg");
 		
 		Map<String, Object> multiIdMap = new HashMap<String, Object>();
+		AggregateIterable<Document> documents;
+		Document groupFields;
 				
 		if(country == null && region != null) {
 			multiIdMap.put("Region", "$countries.region");
 			multiIdMap.put("Food", "$name");
 
-			Document groupFields = new Document(multiIdMap);
+			groupFields = new Document(multiIdMap);
 			
-			AggregateIterable<Document> documents = (AggregateIterable<Document>) collection.aggregate(
+			documents = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
@@ -245,17 +244,14 @@ public class MongoHandler {
 		                      )
 				      )
 			);
-			List<Document> docs = intoList(documents);
-			return Double.parseDouble(docs.get(0).get("AvgProduction").toString());
-			
 		}
 		else {
 			multiIdMap.put("Country", "$countries.country_name");
 			multiIdMap.put("Food", "$name");
 
-			Document groupFields = new Document(multiIdMap);
+			groupFields = new Document(multiIdMap);
 
-			AggregateIterable<Document> documents = collection.aggregate(
+			documents = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
@@ -269,11 +265,10 @@ public class MongoHandler {
 		                      )
 				      )
 			);
-			
-			List<Document> docs = intoList(documents);
-			return Double.parseDouble(docs.get(0).get("AvgProduction").toString());
-		
 		}
+			
+		List<Document> docs = intoList(documents);
+		return Double.parseDouble(docs.get(0).get("AvgProduction").toString());
 	}
 	
 	public static int getTotalImport(String food, String region, String country, String start, String end) {
@@ -281,9 +276,11 @@ public class MongoHandler {
 		ie_collection = db.getCollection("impExpInfo");
 		JSONObject obj ;
 		int TotalImport = 0;
+		
+		MongoCursor<Document> cursor;
 						
 		if(country == null && region != null) {			
-			MongoCursor<Document> cursor = collection.aggregate(
+			cursor = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
@@ -294,34 +291,9 @@ public class MongoHandler {
 				            		  ))
 				      )
 			).iterator();
-					
-			try {
-				while (cursor.hasNext()) {
-					obj = new JSONObject(cursor.next().toJson());
-					JSONObject c = obj.getJSONObject("countries");
-					JSONObject y = c.getJSONObject("years");
-					JSONObject ie;
-					if(y.has("id_ie")) {
-						ie = y.getJSONObject("id_ie");
-					
-						Document document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
-						if (document == null) {
-						    //Document does not exist
-						} else {
-							JSONObject d = new JSONObject(document.toJson());
-							if(d.has("import_qty")) {
-								TotalImport = TotalImport + (int) d.get("import_qty");
-							}
-						}
-					}
-				}
-			} finally {
-				cursor.close();
-			}
-			return TotalImport;
 		}
 		else {
-			MongoCursor<Document> cursor = collection.aggregate(
+			cursor = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
@@ -332,43 +304,42 @@ public class MongoHandler {
 				            		  ))				             
 				      )
 			).iterator();
+		}
 			
-			try {
-				while (cursor.hasNext()) {
-					obj = new JSONObject(cursor.next().toJson());
-					JSONObject c = obj.getJSONObject("countries");
-					JSONObject y = c.getJSONObject("years");
-					JSONObject ie = y.getJSONObject("id_ie");
-					
-					Document document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
-					if (document == null) {
-					    //Document does not exist
-					} else {
-						JSONObject d = new JSONObject(document.toJson());
-						if(d.has("import_qty")) {
-							TotalImport = TotalImport + (int) d.get("import_qty");
-						}
+		try {
+			while (cursor.hasNext()) {
+				obj = new JSONObject(cursor.next().toJson());
+				JSONObject c = obj.getJSONObject("countries");
+				JSONObject y = c.getJSONObject("years");
+				JSONObject ie = y.getJSONObject("id_ie");
+				
+				Document document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
+				if (document == null) {
+				    //Document does not exist
+				} else {
+					JSONObject d = new JSONObject(document.toJson());
+					if(d.has("import_qty")) {
+						TotalImport += (int) d.get("import_qty");
 					}
 				}
-			} finally {
-				cursor.close();
 			}
-			return TotalImport;
+		} finally {
+			cursor.close();
 		}
+		return TotalImport;
 	}
 	
 	public static Double getAverageImport(String food, String region, String country, String start, String end) {
 		collection = db.getCollection("dataModelArrAvg");
+		ie_collection = db.getCollection("impExpInfo");
+		JSONObject obj ;
+		Double year_selected = Double.parseDouble(end) - Double.parseDouble(start);
+		Double AvgImport = 0.0;
 		
-		Map<String, Object> multiIdMap = new HashMap<String, Object>();
-				
-		if(country == null && region != null) {
-			multiIdMap.put("Region", "$countries.region");
-			multiIdMap.put("Food", "$name");
-
-			Document groupFields = new Document(multiIdMap);
-			
-			AggregateIterable<Document> documents = (AggregateIterable<Document>) collection.aggregate(
+		MongoCursor<Document> cursor;
+						
+		if(country == null && region != null) {			
+			cursor = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
@@ -376,23 +347,12 @@ public class MongoHandler {
 				            		  Filters.eq("countries.country_region",region), 
 				            		  Filters.gte("countries.years.year", Integer.parseInt(start)), 
 				            		  Filters.lte("countries.years.year", Integer.parseInt(end))
-				            		  )),
-				              Aggregates.group(groupFields,
-				                      Accumulators.avg("AvgProduction", "$countries.years.production")
-		                      )
+				            		  ))
 				      )
-			);
-			List<Document> docs = intoList(documents);
-			return Double.parseDouble(docs.get(0).get("AvgProduction").toString());
-			
+			).iterator();
 		}
 		else {
-			multiIdMap.put("Country", "$countries.country_name");
-			multiIdMap.put("Food", "$name");
-
-			Document groupFields = new Document(multiIdMap);
-
-			AggregateIterable<Document> documents = collection.aggregate(
+			cursor = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
@@ -400,31 +360,45 @@ public class MongoHandler {
 				            		  Filters.eq("countries.country_name", country),
 				            		  Filters.gte("countries.years.year", Integer.parseInt(start)), 
 				            		  Filters.lte("countries.years.year", Integer.parseInt(end))
-				            		  )),
-				              Aggregates.group(groupFields,
-				                      Accumulators.avg("AvgProduction", "$countries.years.production")
-		                      )
+				            		  ))				             
 				      )
-			);
-			
-			List<Document> docs = intoList(documents);
-			return Double.parseDouble(docs.get(0).get("AvgProduction").toString());
-		
+			).iterator();
 		}
+			
+		try {
+			while (cursor.hasNext()) {
+				obj = new JSONObject(cursor.next().toJson());
+				JSONObject c = obj.getJSONObject("countries");
+				JSONObject y = c.getJSONObject("years");
+				JSONObject ie = y.getJSONObject("id_ie");
+				
+				Document document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
+				if (document == null) {
+				    //Document does not exist
+				} else {
+					JSONObject d = new JSONObject(document.toJson());
+					if(d.has("import_qty")) {
+						AvgImport += (int) d.get("import_qty");
+					}
+				}
+			}
+		} finally {
+			cursor.close();
+		}
+		
+		return AvgImport/year_selected;
 	}
 	
 	public static int getTotalExport(String food, String region, String country, String start, String end) {
 		collection = db.getCollection("dataModelArrAvg");
+		ie_collection = db.getCollection("impExpInfo");
+		JSONObject obj ;
+		int TotalExport = 0;
 		
-		Map<String, Object> multiIdMap = new HashMap<String, Object>();
-				
-		if(country == null && region != null) {
-			multiIdMap.put("Region", "$countries.region");
-			multiIdMap.put("Food", "$name");
-
-			Document groupFields = new Document(multiIdMap);
-			
-			AggregateIterable<Document> documents = (AggregateIterable<Document>) collection.aggregate(
+		MongoCursor<Document> cursor;
+						
+		if(country == null && region != null) {			
+			cursor = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
@@ -432,23 +406,12 @@ public class MongoHandler {
 				            		  Filters.eq("countries.country_region",region), 
 				            		  Filters.gte("countries.years.year", Integer.parseInt(start)), 
 				            		  Filters.lte("countries.years.year", Integer.parseInt(end))
-				            		  )),
-				              Aggregates.group(groupFields,
-				                      Accumulators.avg("AvgProduction", "$countries.years.production")
-		                      )
+				            		  ))
 				      )
-			);
-			List<Document> docs = intoList(documents);
-			return 0;
-			
+			).iterator();
 		}
 		else {
-			multiIdMap.put("Country", "$countries.country_name");
-			multiIdMap.put("Food", "$name");
-
-			Document groupFields = new Document(multiIdMap);
-
-			AggregateIterable<Document> documents = collection.aggregate(
+			cursor = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
@@ -456,31 +419,45 @@ public class MongoHandler {
 				            		  Filters.eq("countries.country_name", country),
 				            		  Filters.gte("countries.years.year", Integer.parseInt(start)), 
 				            		  Filters.lte("countries.years.year", Integer.parseInt(end))
-				            		  )),
-				              Aggregates.group(groupFields,
-				                      Accumulators.avg("AvgProduction", "$countries.years.production")
-		                      )
+				            		  ))				             
 				      )
-			);
-			
-			List<Document> docs = intoList(documents);
-			return 0;
-		
+			).iterator();
 		}
+			
+		try {
+			while (cursor.hasNext()) {
+				obj = new JSONObject(cursor.next().toJson());
+				JSONObject c = obj.getJSONObject("countries");
+				JSONObject y = c.getJSONObject("years");
+				JSONObject ie = y.getJSONObject("id_ie");
+				
+				Document document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
+				if (document == null) {
+				    //Document does not exist
+				} else {
+					JSONObject d = new JSONObject(document.toJson());
+					if(d.has("export_qty")) {
+						TotalExport += (int) d.get("export_qty");
+					}
+				}
+			}
+		} finally {
+			cursor.close();
+		}
+		return TotalExport;
 	}
 	
 	public static Double getAverageExport(String food, String region, String country, String start, String end) {
 		collection = db.getCollection("dataModelArrAvg");
+		ie_collection = db.getCollection("impExpInfo");
+		JSONObject obj ;
+		Double year_selected = Double.parseDouble(end) - Double.parseDouble(start);
+		Double AvgExport = 0.0;
 		
-		Map<String, Object> multiIdMap = new HashMap<String, Object>();
-				
-		if(country == null && region != null) {
-			multiIdMap.put("Region", "$countries.region");
-			multiIdMap.put("Food", "$name");
-
-			Document groupFields = new Document(multiIdMap);
-			
-			AggregateIterable<Document> documents = (AggregateIterable<Document>) collection.aggregate(
+		MongoCursor<Document> cursor;
+						
+		if(country == null && region != null) {			
+			cursor = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
@@ -488,23 +465,12 @@ public class MongoHandler {
 				            		  Filters.eq("countries.country_region",region), 
 				            		  Filters.gte("countries.years.year", Integer.parseInt(start)), 
 				            		  Filters.lte("countries.years.year", Integer.parseInt(end))
-				            		  )),
-				              Aggregates.group(groupFields,
-				                      Accumulators.avg("AvgProduction", "$countries.years.production")
-		                      )
+				            		  ))
 				      )
-			);
-			List<Document> docs = intoList(documents);
-			return Double.parseDouble(docs.get(0).get("AvgProduction").toString());
-			
+			).iterator();
 		}
 		else {
-			multiIdMap.put("Country", "$countries.country_name");
-			multiIdMap.put("Food", "$name");
-
-			Document groupFields = new Document(multiIdMap);
-
-			AggregateIterable<Document> documents = collection.aggregate(
+			cursor = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
@@ -512,17 +478,33 @@ public class MongoHandler {
 				            		  Filters.eq("countries.country_name", country),
 				            		  Filters.gte("countries.years.year", Integer.parseInt(start)), 
 				            		  Filters.lte("countries.years.year", Integer.parseInt(end))
-				            		  )),
-				              Aggregates.group(groupFields,
-				                      Accumulators.avg("AvgProduction", "$countries.years.production")
-		                      )
+				            		  ))				             
 				      )
-			);
-			
-			List<Document> docs = intoList(documents);
-			return Double.parseDouble(docs.get(0).get("AvgProduction").toString());
-		
+			).iterator();
 		}
+			
+		try {
+			while (cursor.hasNext()) {
+				obj = new JSONObject(cursor.next().toJson());
+				JSONObject c = obj.getJSONObject("countries");
+				JSONObject y = c.getJSONObject("years");
+				JSONObject ie = y.getJSONObject("id_ie");
+				
+				Document document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
+				if (document == null) {
+				    //Document does not exist
+				} else {
+					JSONObject d = new JSONObject(document.toJson());
+					if(d.has("import_qty")) {
+						AvgExport += (int) d.get("import_qty");
+					}
+				}
+			}
+		} finally {
+			cursor.close();
+		}
+		
+		return AvgExport/year_selected;
 	}
 	
 	/*
