@@ -1,5 +1,6 @@
 package task2;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.stage.FileChooser;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -44,7 +46,19 @@ public class CompanyController implements Initializable {
 	}
 	
 	public void fileChooser() {
-		System.out.println("ciao");
+		Stage fileChooserStage = new Stage();
+		
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().addAll(
+		    new FileChooser.ExtensionFilter("CSV Files", "*.csv")
+		);
+		
+		File selectedFile = fileChooser.showOpenDialog(fileChooserStage);
+		if(selectedFile!= null) {
+			//inserimento in mongodb
+			System.out.println(selectedFile.getName());
+		}
+		
 	}
 		
 	public void showCompanyInformation(User u) {
@@ -109,8 +123,7 @@ public class CompanyController implements Initializable {
 		} else {
 		    return;
 		}
-	}
-	
+	}	
 
 	@Override
 	 public void initialize(URL url, ResourceBundle rb) {
