@@ -16,11 +16,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -29,11 +31,14 @@ public class DocumentController implements Initializable {
 	@FXML private TextField search_field;
 	
 	//start and end date
-	@FXML private DatePicker start_date;
-	@FXML private DatePicker end_date;
-		private LocalDate start_period;
-		private LocalDate end_period;
+//	@FXML private DatePicker start_date;
+//	@FXML private DatePicker end_date;
+//		private LocalDate start_period;
+//		private LocalDate end_period;
 	
+	@FXML private TextField start_date;
+	@FXML private TextField end_date;
+		
 	//continent combobox
 	@FXML private ComboBox<String> continent_comboBox;
 		private ObservableList<String> continent_list;
@@ -41,6 +46,10 @@ public class DocumentController implements Initializable {
 	//food combobox
 	@FXML private ComboBox<String> food_comboBox;
 		private ObservableList<String> food_list;
+	
+	//aggregation combobox
+	@FXML private ComboBox<String> aggregation;
+		private ObservableList<String> aggregation_list;
 		
 	//radio button 
 	@FXML RadioButton rb_production;
@@ -51,43 +60,72 @@ public class DocumentController implements Initializable {
 		private String food_selected = null;
 		private String region_selected = null;
 		private String radio_selected = null;
+		private String start_year = null;
+		private String end_year = null;
+		private String search = null;
+		private String aggregation_selected = null;
+		
 			
-	
 	public void submit() throws IOException{
 		//getting the values
-		food_selected = food_comboBox.getSelectionModel().getSelectedItem().toString();
-		region_selected = continent_comboBox.getSelectionModel().getSelectedItem().toString();
-		RadioButton selected = (RadioButton)group.getSelectedToggle();
-		radio_selected = selected.getText();
-		start_period = start_date.getValue();
-		end_period = end_date.getValue();
-		
-		//cleaning the fields
-		food_comboBox.getEditor().clear();
-		continent_comboBox.getEditor().clear();
-		start_date.getEditor().clear();
-		end_date.getEditor().clear();
-		
-		group.getToggles().clear();
-		
-		
-		//opening a new window with a new controller
-        Stage dialogStage = new Stage();
-        Scene scene;
-        
-        String resource = "ResultFXML.fxml";
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(resource));
-        
-        Parent root = (Parent) loader.load();
-        
-        ResultController controller = loader.getController();
-        controller.initResult(food_selected, region_selected, radio_selected, start_period, end_period);
-        
-		scene = new Scene(root);
-        dialogStage.setTitle("Analysis result");
-        dialogStage.setScene(scene);
-        dialogStage.show();
+		if(food_comboBox.getSelectionModel().isEmpty() || 
+			(continent_comboBox.getSelectionModel().isEmpty() && search_field.getLength() == 0) ||
+			aggregation.getSelectionModel().isEmpty() ||
+			!group.getSelectedToggle().isSelected() || 
+			start_date.getLength() == 0 || end_date.getLength() == 0
+			) {
+        	
+        	Alert windowAlert = new Alert(AlertType.INFORMATION);
+			windowAlert.setHeaderText("Please fill all the fields");
+			windowAlert.setTitle("Warning");
+			windowAlert.showAndWait();
+        	return;
+		} 
+		else {
+			food_selected = food_comboBox.getSelectionModel().getSelectedItem().toString();
+			if(continent_comboBox.getSelectionModel().isEmpty()) 
+				region_selected = null;
+			else 
+				region_selected = continent_comboBox.getSelectionModel().getSelectedItem().toString();
+			RadioButton selected = (RadioButton)group.getSelectedToggle();
+			radio_selected = selected.getText();
+			start_year = start_date.getText();
+			end_year = end_date.getText();
+			if(search_field.getLength() > 0)
+				search = search_field.getText();
+			else
+				search = null;
+			aggregation_selected = aggregation.getSelectionModel().getSelectedItem().toString();
+					
+			//cleaning the fields
+			food_comboBox.getEditor().clear();
+			continent_comboBox.getEditor().clear();
+			start_date.clear();
+			end_date.clear();
+			search_field.clear();
+			aggregation.getEditor().clear();
+			
+			group.getToggles().clear();
+			
+			
+			//opening a new window with a new controller
+	        Stage dialogStage = new Stage();
+	        Scene scene;
+	        
+	        String resource = "ResultFXML.fxml";
+	        FXMLLoader loader = new FXMLLoader();
+	        loader.setLocation(getClass().getResource(resource));
+	        
+	        Parent root = (Parent) loader.load();
+	        
+	        ResultController controller = loader.getController();
+	        controller.initResult(food_selected, region_selected, search, radio_selected, start_year, end_year, aggregation_selected);
+	        
+			scene = new Scene(root);
+	        dialogStage.setTitle("Analysis result");
+	        dialogStage.setScene(scene);
+	        dialogStage.show();
+		}
         		
         //ResultController controller = loader.getController();
               
@@ -155,6 +193,10 @@ public class DocumentController implements Initializable {
 	
 	@Override
 	 public void initialize(URL url, ResourceBundle rb) {
+		//filling the aggregation combobox
+		aggregation_list = FXCollections.observableArrayList("Sum", "Average");
+		aggregation.setItems(aggregation_list);
+		
 		//filling the continent combobox
 		continent_list = FXCollections.observableArrayList("World", 
 				"Africa", "North America", "South America", "Asia", "Europe", "Oceania");

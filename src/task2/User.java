@@ -15,6 +15,7 @@ public class User {
 	private String number;
 	private String coreBusiness;
 	
+	
 	public User(String username, String password, String companyName, String address, String country, String email, String number, String coreBusiness) {
 		this.username = username;
 		this.password = password;
@@ -36,7 +37,7 @@ public class User {
 		this.number = u.number;
 		this.coreBusiness = u.coreBusiness;
 	}
-	
+		
 	public String getUsername() {
 		return username;
 	}
