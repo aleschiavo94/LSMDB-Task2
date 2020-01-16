@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import task2.DocumentController;
@@ -83,9 +84,7 @@ public class CompanyController implements Initializable {
 	}
 	
 	
-	public void fileChooser() {
-		System.out.println("ciao");
-	}
+	
 	
 
 	@Override

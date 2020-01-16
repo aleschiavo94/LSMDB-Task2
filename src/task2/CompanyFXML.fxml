@@ -94,10 +94,6 @@
             <Font size="16.0" />
          </font>
       </Button>
-      <ImageView fitHeight="98.0" fitWidth="117.0" layoutX="331.0" layoutY="385.0" onMouseClicked="#fileChooser" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../Desktop/document-upload-icon-16.jpeg" />
-         </image>
-      </ImageView>
+      
    </children>
 </Pane>
