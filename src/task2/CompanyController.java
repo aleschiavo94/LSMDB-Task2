@@ -2,6 +2,7 @@ package task2;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.json.JSONObject;
@@ -13,8 +14,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import task2.DocumentController;
@@ -31,6 +35,7 @@ public class CompanyController implements Initializable {
 	@FXML private Label business_field;
 	@FXML private Button logout_button;
 	@FXML private Button modify_button;
+	@FXML private Button delete_button;
 
 	
 	public void initCompany(User u) {
@@ -41,7 +46,7 @@ public class CompanyController implements Initializable {
 	public void fileChooser() {
 		System.out.println("ciao");
 	}
-	
+		
 	public void showCompanyInformation(User u) {
 		username_field.setText(current_company.getUsername());
 		company_field.setText(current_company.getCompanyName());
@@ -86,6 +91,24 @@ public class CompanyController implements Initializable {
         		
        ChangesController controller = loader.getController();
        controller.initUser(current_company);
+	}
+	
+	public void deleteAccount() {
+		Alert windowAlert = new Alert(AlertType.CONFIRMATION);
+		windowAlert.setHeaderText(null);
+		windowAlert.setContentText("Are you sure you want to cancel your account?");
+		windowAlert.setTitle("Are you sure?");
+    	
+		Optional<ButtonType> result = windowAlert.showAndWait();
+		if (result.get() == ButtonType.OK){
+		    MongoHandler.deleteAccountByUsername(current_company.getUsername());
+			
+			//closing the window
+	    	Stage stage = (Stage) delete_button.getScene().getWindow();
+	    	stage.close();
+		} else {
+		    return;
+		}
 	}
 	
 

@@ -63,6 +63,7 @@ public class DocumentController implements Initializable {
 		private String start_year = null;
 		private String end_year = null;
 		private String search = null;
+		private String aggregation_selected = null;
 		
 			
 	public void submit() throws IOException{
@@ -94,6 +95,7 @@ public class DocumentController implements Initializable {
 				search = search_field.getText();
 			else
 				search = null;
+			aggregation_selected = aggregation.getSelectionModel().getSelectedItem().toString();
 					
 			//cleaning the fields
 			food_comboBox.getEditor().clear();
@@ -101,6 +103,7 @@ public class DocumentController implements Initializable {
 			start_date.clear();
 			end_date.clear();
 			search_field.clear();
+			aggregation.getEditor().clear();
 			
 			group.getToggles().clear();
 			
@@ -116,7 +119,7 @@ public class DocumentController implements Initializable {
 	        Parent root = (Parent) loader.load();
 	        
 	        ResultController controller = loader.getController();
-	        controller.initResult(food_selected, region_selected, search, radio_selected, start_year, end_year);
+	        controller.initResult(food_selected, region_selected, search, radio_selected, start_year, end_year, aggregation_selected);
 	        
 			scene = new Scene(root);
 	        dialogStage.setTitle("Analysis result");
