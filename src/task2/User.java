@@ -27,6 +27,18 @@ public class User {
 		this.coreBusiness = coreBusiness;
 	}
 	
+	public User(String username, String pwd) {
+		this.username = username;
+		this.password = pwd;
+		this.companyName = null;
+		this.address = null;
+		this.country = null;
+		this.email = null;
+		this.number = null;
+		this.coreBusiness = null;
+	}
+	
+	
 	public User(User u) {
 		this.username = u.username;
 		this.password = u.password;
