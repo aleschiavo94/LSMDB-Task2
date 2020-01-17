@@ -1,6 +1,11 @@
 package task2;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
@@ -57,6 +62,13 @@ public class CompanyController implements Initializable {
 		if(selectedFile!= null) {
 			//inserimento in mongodb
 			System.out.println(selectedFile.getName());
+			try (BufferedReader reader = new BufferedReader(new FileReader(selectedFile))) {
+		        String line;
+		        while ((line = reader.readLine()) != null)
+		            System.out.println(line);
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
 		}
 		
 	}
