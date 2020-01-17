@@ -62,17 +62,25 @@ public class MongoHandler {
 	public static User checkUserCredential(String username, String pwd){
 		collection = db.getCollection("users");
 		MongoCursor<Document> cursor = collection.find().iterator();
-
+		
 		JSONObject user;
 		Document document = collection.find(Filters.and(Filters.eq("username", username), Filters.eq("password", pwd))).first();
-		if (document == null) {
+		if (document == null) { 
 			return null;
 		} else {
 			user = new JSONObject(document.toJson());
-			User u = new User(user.get("username").toString(), user.get("password").toString(), 
-					user.get("company_name").toString(), user.get("address").toString(), 
-					user.get("country").toString(), user.get("email").toString(), 
-					user.get("number").toString(), user.get("core_business").toString());
+			User u; System.out.println(user.length());
+			if(user.length()==3) {
+				u= new User(user.getString("username").toString(),
+						user.getString("password").toString());
+			}else {
+				u = new User(user.get("username").toString(), user.get("password").toString(), 
+						user.get("company_name").toString(), user.get("address").toString(), 
+						user.get("country").toString(), user.get("email").toString(), 
+						user.get("number").toString(), user.get("core_business").toString());
+						
+			}
+			
 			return u;
 		}
 	}
