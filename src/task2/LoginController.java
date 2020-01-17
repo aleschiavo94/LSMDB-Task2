@@ -27,14 +27,14 @@ public class LoginController implements Initializable {
 		String username = username_field.getText();
 		String password = password_field.getText();
 		
-		password = HashClass.convertToSha(password);
+		password = HashClass.convertToSha(password);	
 		
 		User u;
 		
 		//searching for credentials
 		u = MongoHandler.checkUserCredential(username, password);
 		
-		if(u != null) {
+		if(u != null && !u.getUsername().equals("admin")) {
 			//closing the window
 			Stage oldStage = new Stage();
             Node source = (Node) event.getSource();
@@ -59,6 +59,29 @@ public class LoginController implements Initializable {
 	        dialogStage.setScene(scene);
 		    dialogStage.show();
 			
+		}else if(u!= null && u.getUsername().equals("admin")) {
+			//closing the window
+			Stage oldStage = new Stage();
+            Node source = (Node) event.getSource();
+                oldStage = (Stage) source.getScene().getWindow();
+                oldStage.close();
+                
+			//opening a new window with a new controller
+	        Stage dialogStage = new Stage();
+	        Scene scene;
+	        
+	        String resource = "AdminFXML.fxml";
+	        FXMLLoader loader = new FXMLLoader();
+	        loader.setLocation(getClass().getResource(resource));
+	        Parent root = (Parent) loader.load();
+	        
+	        AdminController controller = loader.getController();
+		        
+			scene = new Scene(root);
+	        dialogStage.setTitle("Admin Account");
+	        dialogStage.initModality(Modality.WINDOW_MODAL);
+	        dialogStage.setScene(scene);
+		    dialogStage.show();
 		}else {
 			username_field.clear();
 			password_field.clear();
