@@ -88,7 +88,6 @@ public class MongoHandler {
 	
 	public static User getUserByUsername(String username) {
 		collection = db.getCollection("users");
-		MongoCursor<Document> cursor = collection.find().iterator();
 
 		JSONObject user;
 		Document document = collection.find(Filters.eq("username", username)).first();
@@ -102,6 +101,26 @@ public class MongoHandler {
 					user.get("number").toString(), user.get("core_business").toString());
 			return u;
 		}
+	}
+	
+	public static List<String> getAllUsers(){
+		collection = db.getCollection("users");
+		
+		MongoCursor<Document> cursor = collection.find().iterator();
+
+		JSONObject user;		
+		List<String> user_list = new ArrayList<String>();
+		try {
+			while (cursor.hasNext()) {
+				user = new JSONObject(cursor.next().toJson());
+				if(!user.get("username").toString().equals("admin")) {
+					user_list.add(user.get("username").toString());
+				}
+			}
+		} finally {
+			cursor.close();
+		}
+		return user_list;
 	}
 	
 	public static void changeInformation(User new_user, String old_username) {
