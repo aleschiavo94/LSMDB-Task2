@@ -210,6 +210,7 @@ public class MongoHandler {
 		Document query = new Document("countries.$.years", doc);
 		Document push_element = new Document("$push", query);
 		
+		//aggiungere controllo sullo stato se esiste
 		Bson filters = Filters.and(Filters.eq("name", json.getString("name")), Filters.eq("countries.country_name", json.getString("country_name")));
 													
 		UpdateResult result = collection.updateOne(filters, push_element); //Updates.addToSet("countries.years", updateQuery));
