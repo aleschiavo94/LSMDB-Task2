@@ -11,6 +11,8 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javax.xml.soap.Text;
+
 import org.json.JSONObject;
 
 import javafx.event.ActionEvent;
@@ -51,6 +53,11 @@ public class CompanyController implements Initializable {
 	}
 	
 	public void fileChooser() {
+        String csv_split = ",";
+        FromCsvToJson cvsJson = null;
+		String[] line_splitted;
+		String text = null;
+		
 		Stage fileChooserStage = new Stage();
 		
 		FileChooser fileChooser = new FileChooser();
@@ -61,14 +68,29 @@ public class CompanyController implements Initializable {
 		File selectedFile = fileChooser.showOpenDialog(fileChooserStage);
 		if(selectedFile!= null) {
 			//inserimento in mongodb
-			System.out.println(selectedFile.getName());
 			try (BufferedReader reader = new BufferedReader(new FileReader(selectedFile))) {
 		        String line;
-		        while ((line = reader.readLine()) != null)
-		            System.out.println(line);
+		        BufferedReader rain = null;
+		        int i = 0;
+		        while ((line = reader.readLine()) != null) {
+		            i++;
+			        line_splitted = line.split(csv_split, -1);
+	            	
+			        cvsJson = new FromCsvToJson(line_splitted);
+	                String json = cvsJson.toJson().toString();
+	                json = json + "\n";
+	                
+                	text = json;
+	         		json = "";
+	         		for(int c = 0; c < line_splitted.length; c++)
+	         			line_splitted[c] = "";
+	            }
 		    } catch (IOException e) {
 		        e.printStackTrace();
 		    }
+
+            System.out.println(text);
+            MongoHandler.insertFood(text);
 		}
 		
 	}
