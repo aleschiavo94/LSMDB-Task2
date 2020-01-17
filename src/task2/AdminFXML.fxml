@@ -1,6 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="508.0" prefWidth="702.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" />
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="523.0" prefWidth="987.0" style="-fx-background-image: url(&quot;cut2.jpg&quot;); -fx-background-size: cover;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="task2.AdminController">
+   <children>
+      <Button fx:id="logout_button" layoutX="198.0" layoutY="408.0" mnemonicParsing="false" onAction="#logout" style="-fx-background-color: #eaa822;" text="Logout" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <TextField fx:id="username_field" layoutX="175.0" layoutY="327.0" prefHeight="31.0" prefWidth="195.0" promptText="Username">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <Label layoutX="175.0" layoutY="277.0" prefHeight="28.0" prefWidth="195.0" text="Write the username" textFill="#f8be52">
+         <font>
+            <Font name="Malgun Gothic Bold" size="19.0" />
+         </font>
+      </Label>
+      <Label layoutX="175.0" layoutY="299.0" prefHeight="28.0" prefWidth="209.0" text="to delete the account:" textFill="#f8be52">
+         <font>
+            <Font name="Malgun Gothic Bold" size="19.0" />
+         </font>
+      </Label>
+      <Button fx:id="delete_button" layoutX="387.0" layoutY="324.0" mnemonicParsing="false" onAction="#deleteAccount" style="-fx-background-color: #B22222;" text="Delete" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Label layoutX="475.0" layoutY="291.0" prefHeight="28.0" prefWidth="195.0" text="Insert a new file" textFill="#f8be52">
+         <font>
+            <Font name="Malgun Gothic Bold" size="19.0" />
+         </font>
+      </Label>
+      <Button layoutX="507.0" layoutY="324.0" mnemonicParsing="false" onAction="#fileChooser" style="-fx-background-color: #6B8E23;" text="Upload" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <ListView fx:id="user_list" layoutX="189.0" layoutY="125.0" onMouseClicked="#showInformations" prefHeight="108.0" prefWidth="129.0" />
+      <Label layoutX="189.0" layoutY="97.0" prefHeight="28.0" prefWidth="145.0" text="User list" textFill="#f8be52">
+         <font>
+            <Font name="Malgun Gothic Bold" size="19.0" />
+         </font>
+      </Label>
+      <TextArea fx:id="user_area" editable="false" layoutX="400.0" layoutY="125.0" prefHeight="108.0" prefWidth="237.0" scrollTop="100.0" />
+      <Label fx:id="user_information" layoutX="403.0" layoutY="97.0" prefHeight="28.0" prefWidth="209.0" text="User information" textFill="#f8be52">
+         <font>
+            <Font name="Malgun Gothic Bold" size="19.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>
