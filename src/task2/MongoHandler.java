@@ -26,6 +26,7 @@ import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.UnwindOptions;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
@@ -69,7 +70,7 @@ public class MongoHandler {
 			return null;
 		} else {
 			user = new JSONObject(document.toJson());
-			User u; System.out.println(user.length());
+			User u; 
 			if(user.length()==3) {
 				u= new User(user.getString("username").toString(),
 						user.getString("password").toString());
@@ -169,32 +170,40 @@ public class MongoHandler {
 	
 	
 	/*
-	 * QUERY
+	 * QUERY PRODUCTION
 	 */
-	public static int getTotalProduction(String food, String region, String country, String start, String end) {
+	public static JSONObject getTotalProduction(String food, String region, String country, String start, String end) {
 		collection = db.getCollection("dataModelArrAvg");
 		
 		Map<String, Object> multiIdMap = new HashMap<String, Object>();
 		AggregateIterable<Document> documents;
 		Document groupFields;
+		Bson groupFilters;
 				
 		if(country == null && region != null) {
-			multiIdMap.put("Region", "$countries.region");
+			
+			if(!region.equals("World")) {
+				groupFilters = Filters.and(Filters.eq("name", food), Filters.eq("countries.country_region",region));
+			}
+			else 
+				groupFilters = Filters.and(Filters.eq("name", food));
+			
+			multiIdMap.put("Region", "$countries.country_region");
 			multiIdMap.put("Food", "$name");
-
 			groupFields = new Document(multiIdMap);
 			
 			documents = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
-				              Aggregates.match(Filters.and(Filters.eq("name", food), 
-				            		  Filters.eq("countries.country_region",region), 
+				              Aggregates.match(Filters.and(groupFilters, 
 				            		  Filters.gte("countries.years.year", Integer.parseInt(start)), 
 				            		  Filters.lte("countries.years.year", Integer.parseInt(end))
 				            		  )),
 				              Aggregates.group(groupFields,
-				                      Accumulators.sum("TotalProduction", "$countries.years.production")
+				                      Accumulators.sum("TotalProduction", "$countries.years.production"),
+				                      Accumulators.avg("AvgPrecipitation", "$countries.years.rainfall_avg"),
+				                      Accumulators.avg("AvgTemperature", "$countries.years.temperature_avg")
 		                      )
 				      )
 			);
@@ -215,40 +224,53 @@ public class MongoHandler {
 				            		  Filters.lte("countries.years.year", Integer.parseInt(end))
 				            		  )),
 				              Aggregates.group(groupFields,
-				                      Accumulators.sum("TotalProduction", "$countries.years.production")
+				                      Accumulators.sum("TotalProduction", "$countries.years.production"),
+				                      Accumulators.avg("AvgPrecipitation", "$countries.years.rainfall_avg"),
+				                      Accumulators.avg("AvgTemperature", "$countries.years.temperature_avg")
 		                      )
 				      )
 			);
 		}
 			
 		List<Document> docs = intoList(documents);
-		return Integer.parseInt(docs.get(0).get("TotalProduction").toString());
+		JSONObject ret = new JSONObject();
+		ret.put("TotalProduction", Integer.parseInt(docs.get(0).get("TotalProduction").toString()));
+		ret.put("AvgPrecipitation", Double.parseDouble(docs.get(0).get("AvgPrecipitation").toString()));
+		ret.put("AvgTemperature", Double.parseDouble(docs.get(0).get("AvgTemperature").toString()));
+		return ret;
 	}
 	
-	public static Double getAverageProduction(String food, String region, String country, String start, String end) {
+	public static JSONObject getAverageProduction(String food, String region, String country, String start, String end) {
 		collection = db.getCollection("dataModelArrAvg");
 		
 		Map<String, Object> multiIdMap = new HashMap<String, Object>();
 		AggregateIterable<Document> documents;
 		Document groupFields;
+		Bson groupFilters;
 				
 		if(country == null && region != null) {
-			multiIdMap.put("Region", "$countries.region");
+			if(!region.equals("World")) {
+				groupFilters = Filters.and(Filters.eq("name", food), Filters.eq("countries.country_region",region));
+			}
+			else 
+				groupFilters = Filters.and(Filters.eq("name", food));
+			
+			multiIdMap.put("Region", "$countries.country_region");
 			multiIdMap.put("Food", "$name");
-
 			groupFields = new Document(multiIdMap);
 			
 			documents = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
-				              Aggregates.match(Filters.and(Filters.eq("name", food), 
-				            		  Filters.eq("countries.country_region",region), 
+				              Aggregates.match(Filters.and(groupFilters, 
 				            		  Filters.gte("countries.years.year", Integer.parseInt(start)), 
 				            		  Filters.lte("countries.years.year", Integer.parseInt(end))
 				            		  )),
 				              Aggregates.group(groupFields,
-				                      Accumulators.avg("AvgProduction", "$countries.years.production")
+				                      Accumulators.avg("AvgProduction", "$countries.years.production"),
+				                      Accumulators.avg("AvgPrecipitation", "$countries.years.rainfall_avg"),
+				                      Accumulators.avg("AvgTemperature", "$countries.years.temperature_avg")
 		                      )
 				      )
 			);
@@ -269,31 +291,114 @@ public class MongoHandler {
 				            		  Filters.lte("countries.years.year", Integer.parseInt(end))
 				            		  )),
 				              Aggregates.group(groupFields,
-				                      Accumulators.avg("AvgProduction", "$countries.years.production")
+				                      Accumulators.avg("AvgProduction", "$countries.years.production"),
+				                      Accumulators.avg("AvgPrecipitation", "$countries.years.rainfall_avg"),
+				                      Accumulators.avg("AvgTemperature", "$countries.years.temperature_avg")
 		                      )
 				      )
 			);
 		}
 			
 		List<Document> docs = intoList(documents);
-		return Double.parseDouble(docs.get(0).get("AvgProduction").toString());
+		JSONObject ret = new JSONObject();
+		ret.put("AvgProduction", Integer.parseInt(docs.get(0).get("AvgProduction").toString()));
+		ret.put("AvgPrecipitation", Double.parseDouble(docs.get(0).get("AvgPrecipitation").toString()));
+		ret.put("AvgTemperature", Double.parseDouble(docs.get(0).get("AvgTemperature").toString()));
+		return ret;
 	}
 	
-	public static int getTotalImport(String food, String region, String country, String start, String end) {
+	public static JSONObject getTop5Production(String food, String region, String start, String end) {
+		collection = db.getCollection("dataModelArrAvg");
+		
+		JSONObject obj = new JSONObject();
+		JSONArray totalCountry = new JSONArray();
+		int TotalProduction = 0;
+		Double AvgPrecipitation = 0.0;
+		Double AvgTemperature = 0.0;
+		Double year_selected = (Double.parseDouble(end) - Double.parseDouble(start)) + 1.0;
+		
+		Bson groupFilters;
+		if(!region.equals("World")) 
+			groupFilters = Filters.and(Filters.eq("name", food), Filters.eq("countries.country_region",region));
+		else
+			groupFilters = Filters.and(Filters.eq("name", food));
+		
+		Map<String, Object> multiIdMap = new HashMap<String, Object>();
+		multiIdMap.put("Country", "$countries.country_name");
+		multiIdMap.put("Food", "$name");
+		Document groupFields = new Document(multiIdMap);
+		
+		MongoCursor<Document> cursor = collection.aggregate(
+			      Arrays.asList(
+			    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
+			    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
+			              Aggregates.match(Filters.and(groupFilters, 
+			            		  Filters.gte("countries.years.year", Integer.parseInt(start)), 
+			            		  Filters.lte("countries.years.year", Integer.parseInt(end))
+			            		  )),
+			              Aggregates.group(groupFields,
+			            		  Accumulators.sum("TotalProduction", "$countries.years.production"),
+			                      Accumulators.avg("AvgPrecipitation", "$countries.years.rainfall_avg"),
+			                      Accumulators.avg("AvgTemperature", "$countries.years.temperature_avg")
+	                      ),
+			              Aggregates.sort(Sorts.descending("TotalProduction"))
+			      )
+		).iterator();
+		
+		int i = 0;
+		try {
+			while (cursor.hasNext()) {
+				JSONObject country = new JSONObject();
+				obj = new JSONObject(cursor.next().toJson());
+				
+//				System.out.println(obj);
+				JSONObject id = obj.getJSONObject("_id");
+				country.put("Country", id.get("Country"));
+				country.put("TotalProduction", obj.get("TotalProduction"));
+				country.put("AvgPrecipitation", obj.get("AvgPrecipitation"));
+				country.put("AvgTemperature", obj.get("AvgTemperature"));
+
+				totalCountry.put(i, country);
+				if(i == 4) 
+					break;
+				else
+					i++;
+			}
+		} finally {
+			cursor.close();
+		}
+		System.out.println(totalCountry);
+		return null;
+	}
+	
+	
+	/*
+	 * QUERY IMPORT
+	 */
+	public static JSONObject getTotalImport(String food, String region, String country, String start, String end) {
 		collection = db.getCollection("dataModelArrAvg");
 		ie_collection = db.getCollection("impExpInfo");
-		JSONObject obj ;
+		JSONObject obj = new JSONObject();
 		int TotalImport = 0;
+		Double AvgPrecipitation = 0.0;
+		Double AvgTemperature = 0.0;
+		Double year_selected = (Double.parseDouble(end) - Double.parseDouble(start)) + 1.0;
 		
 		MongoCursor<Document> cursor;
+		Bson groupFilters;
 						
-		if(country == null && region != null) {			
+		if(country == null && region != null) {
+			if(!region.equals("World")) {
+				groupFilters = Filters.and(Filters.eq("name", food), Filters.eq("countries.country_region",region));
+			}
+			else 
+				groupFilters = Filters.and(Filters.eq("name", food));
+			
 			cursor = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
-				              Aggregates.match(Filters.and(Filters.eq("name", food), 
-				            		  Filters.eq("countries.country_region",region), 
+				              Aggregates.match(Filters.and(groupFilters, 
 				            		  Filters.gte("countries.years.year", Integer.parseInt(start)), 
 				            		  Filters.lte("countries.years.year", Integer.parseInt(end))
 				            		  ))
@@ -320,6 +425,9 @@ public class MongoHandler {
 				JSONObject c = obj.getJSONObject("countries");
 				JSONObject y = c.getJSONObject("years");
 				JSONObject ie = y.getJSONObject("id_ie");
+				
+				AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
+				AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
 				
 				Document document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
 				if (document == null) {
@@ -334,25 +442,38 @@ public class MongoHandler {
 		} finally {
 			cursor.close();
 		}
-		return TotalImport;
+		
+		JSONObject ret = new JSONObject();
+		ret.put("TotalImport", TotalImport);
+		ret.put("AvgPrecipitation", AvgPrecipitation/year_selected);
+		ret.put("AvgTemperature", AvgTemperature/year_selected);
+		return ret;
 	}
 	
-	public static Double getAverageImport(String food, String region, String country, String start, String end) {
+	public static JSONObject getAverageImport(String food, String region, String country, String start, String end) {
 		collection = db.getCollection("dataModelArrAvg");
 		ie_collection = db.getCollection("impExpInfo");
 		JSONObject obj ;
-		Double year_selected = Double.parseDouble(end) - Double.parseDouble(start);
+		Double year_selected = (Double.parseDouble(end) - Double.parseDouble(start)) + 1.0;
 		Double AvgImport = 0.0;
-		
+		Double AvgPrecipitation = 0.0;
+		Double AvgTemperature = 0.0;
+				
 		MongoCursor<Document> cursor;
-						
-		if(country == null && region != null) {			
+		Bson groupFilters;				
+		
+		if(country == null && region != null) {	
+			if(!region.equals("World")) {
+				groupFilters = Filters.and(Filters.eq("name", food), Filters.eq("countries.country_region",region));
+			}
+			else 
+				groupFilters = Filters.and(Filters.eq("name", food));
+			
 			cursor = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
-				              Aggregates.match(Filters.and(Filters.eq("name", food), 
-				            		  Filters.eq("countries.country_region",region), 
+				              Aggregates.match(Filters.and(groupFilters, 
 				            		  Filters.gte("countries.years.year", Integer.parseInt(start)), 
 				            		  Filters.lte("countries.years.year", Integer.parseInt(end))
 				            		  ))
@@ -379,6 +500,9 @@ public class MongoHandler {
 				JSONObject c = obj.getJSONObject("countries");
 				JSONObject y = c.getJSONObject("years");
 				JSONObject ie = y.getJSONObject("id_ie");
+				
+				AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
+				AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
 				
 				Document document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
 				if (document == null) {
@@ -394,24 +518,41 @@ public class MongoHandler {
 			cursor.close();
 		}
 		
-		return AvgImport/year_selected;
+		JSONObject ret = new JSONObject();
+		ret.put("AvgImport", AvgImport/year_selected);
+		ret.put("AvgPrecipitation", AvgPrecipitation/year_selected);
+		ret.put("AvgTemperature", AvgTemperature/year_selected);
+		return ret;
 	}
 	
-	public static int getTotalExport(String food, String region, String country, String start, String end) {
+	
+	/*
+	 * QUERY EXPORT
+	 */
+	public static JSONObject getTotalExport(String food, String region, String country, String start, String end) {
 		collection = db.getCollection("dataModelArrAvg");
 		ie_collection = db.getCollection("impExpInfo");
 		JSONObject obj ;
 		int TotalExport = 0;
+		Double year_selected = (Double.parseDouble(end) - Double.parseDouble(start)) + 1.0;
+		Double AvgPrecipitation = 0.0;
+		Double AvgTemperature = 0.0;
 		
 		MongoCursor<Document> cursor;
+		Bson groupFilters;
 						
-		if(country == null && region != null) {			
+		if(country == null && region != null) {		
+			if(!region.equals("World")) {
+				groupFilters = Filters.and(Filters.eq("name", food), Filters.eq("countries.country_region",region));
+			}
+			else 
+				groupFilters = Filters.and(Filters.eq("name", food));
+			
 			cursor = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
-				              Aggregates.match(Filters.and(Filters.eq("name", food), 
-				            		  Filters.eq("countries.country_region",region), 
+				              Aggregates.match(Filters.and(groupFilters, 
 				            		  Filters.gte("countries.years.year", Integer.parseInt(start)), 
 				            		  Filters.lte("countries.years.year", Integer.parseInt(end))
 				            		  ))
@@ -438,6 +579,9 @@ public class MongoHandler {
 				JSONObject c = obj.getJSONObject("countries");
 				JSONObject y = c.getJSONObject("years");
 				JSONObject ie = y.getJSONObject("id_ie");
+				
+				AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
+				AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
 				
 				Document document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
 				if (document == null) {
@@ -452,25 +596,37 @@ public class MongoHandler {
 		} finally {
 			cursor.close();
 		}
-		return TotalExport;
+		JSONObject ret = new JSONObject();
+		ret.put("TotalExport", TotalExport);
+		ret.put("AvgPrecipitation", AvgPrecipitation/year_selected);
+		ret.put("AvgTemperature", AvgTemperature/year_selected);
+		return ret;
 	}
 	
-	public static Double getAverageExport(String food, String region, String country, String start, String end) {
+	public static JSONObject getAverageExport(String food, String region, String country, String start, String end) {
 		collection = db.getCollection("dataModelArrAvg");
 		ie_collection = db.getCollection("impExpInfo");
 		JSONObject obj ;
-		Double year_selected = Double.parseDouble(end) - Double.parseDouble(start);
 		Double AvgExport = 0.0;
+		Double year_selected = (Double.parseDouble(end) - Double.parseDouble(start)) + 1.0;
+		Double AvgPrecipitation = 0.0;
+		Double AvgTemperature = 0.0;
 		
 		MongoCursor<Document> cursor;
+		Bson groupFilters;
 						
-		if(country == null && region != null) {			
+		if(country == null && region != null) {	
+			if(!region.equals("World")) {
+				groupFilters = Filters.and(Filters.eq("name", food), Filters.eq("countries.country_region",region));
+			}
+			else 
+				groupFilters = Filters.and(Filters.eq("name", food));
+			
 			cursor = collection.aggregate(
 				      Arrays.asList(
 				    		  Aggregates.unwind("$countries", new UnwindOptions().preserveNullAndEmptyArrays(true)),
 				    		  Aggregates.unwind("$countries.years", new UnwindOptions().preserveNullAndEmptyArrays(true)),
-				              Aggregates.match(Filters.and(Filters.eq("name", food), 
-				            		  Filters.eq("countries.country_region",region), 
+				              Aggregates.match(Filters.and(groupFilters, 
 				            		  Filters.gte("countries.years.year", Integer.parseInt(start)), 
 				            		  Filters.lte("countries.years.year", Integer.parseInt(end))
 				            		  ))
@@ -498,6 +654,9 @@ public class MongoHandler {
 				JSONObject y = c.getJSONObject("years");
 				JSONObject ie = y.getJSONObject("id_ie");
 				
+				AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
+				AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
+				
 				Document document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
 				if (document == null) {
 				    //Document does not exist
@@ -511,9 +670,14 @@ public class MongoHandler {
 		} finally {
 			cursor.close();
 		}
-		
-		return AvgExport/year_selected;
+
+		JSONObject ret = new JSONObject();
+		ret.put("AvgExport", AvgExport/year_selected);
+		ret.put("AvgPrecipitation", AvgPrecipitation/year_selected);
+		ret.put("AvgTemperature", AvgTemperature/year_selected);
+		return ret;
 	}
+	
 	
 	/*
 	 * UTILITY FUNCTIONS

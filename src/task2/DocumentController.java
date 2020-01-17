@@ -19,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -76,11 +77,33 @@ public class DocumentController implements Initializable {
 			) {
         	
         	Alert windowAlert = new Alert(AlertType.INFORMATION);
-			windowAlert.setHeaderText("Please fill all the fields");
+        	windowAlert.setHeaderText(null);
+			windowAlert.setContentText("Please fill all the fields");
 			windowAlert.setTitle("Warning");
 			windowAlert.showAndWait();
         	return;
-		} 
+		}
+		else if(continent_comboBox.getSelectionModel().isEmpty() && aggregation.getSelectionModel().getSelectedItem().toString().equals("Top 5")) {
+			Alert windowAlert = new Alert(AlertType.INFORMATION);
+			windowAlert.setHeaderText(null);
+			windowAlert.setContentText("With Top 5 aggregation, please select a Region");
+			windowAlert.setTitle("Warning");
+			windowAlert.showAndWait();
+			
+			search_field.clear();
+        	return;
+		}
+		else if((((Labeled) group.getSelectedToggle()).getText().equals("Import") || ((Labeled) group.getSelectedToggle()).getText().equals("Export"))
+				&& aggregation.getSelectionModel().getSelectedItem().toString().equals("Top 5")) {
+			Alert windowAlert = new Alert(AlertType.INFORMATION);
+			windowAlert.setHeaderText(null);
+			windowAlert.setContentText("Top 5 aggregation is possible only with Production");
+			windowAlert.setTitle("Warning");
+			windowAlert.showAndWait();
+			
+			search_field.clear();
+        	return;
+		}
 		else {
 			food_selected = food_comboBox.getSelectionModel().getSelectedItem().toString();
 			if(continent_comboBox.getSelectionModel().isEmpty()) 
@@ -194,7 +217,7 @@ public class DocumentController implements Initializable {
 	@Override
 	 public void initialize(URL url, ResourceBundle rb) {
 		//filling the aggregation combobox
-		aggregation_list = FXCollections.observableArrayList("Sum", "Average");
+		aggregation_list = FXCollections.observableArrayList("Sum", "Average", "Top 5");
 		aggregation.setItems(aggregation_list);
 		
 		//filling the continent combobox
