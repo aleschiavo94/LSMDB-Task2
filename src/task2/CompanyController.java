@@ -90,11 +90,27 @@ public class CompanyController implements Initializable {
 		    }
 
             System.out.println(text);
-            MongoHandler.insertFood(text);
+            int ris = MongoHandler.insertFood(text);
+            
+			if(ris == 0) {
+				Alert windowAlert = new Alert(AlertType.WARNING);
+				windowAlert.setHeaderText(null);
+				windowAlert.setContentText("Something went wrong. Please try again!");
+				windowAlert.setTitle("Try again");
+				windowAlert.showAndWait();
+	        	return;
+			}
+			else {
+				Alert windowAlert = new Alert(AlertType.INFORMATION);
+				windowAlert.setHeaderText(null);
+				windowAlert.setContentText("File inserted correctly!");
+				windowAlert.setTitle("Complete");
+				windowAlert.showAndWait();
+	        	return;
+			}
 		}
-		
 	}
-		
+	
 	public void showCompanyInformation(User u) {
 		username_field.setText(current_company.getUsername());
 		company_field.setText(current_company.getCompanyName());

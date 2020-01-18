@@ -1,6 +1,8 @@
 package task2;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
@@ -41,6 +43,11 @@ public class AdminController implements Initializable{
 	}
 	
 	public void fileChooser() {
+        String csv_split = ",";
+        FromCsvToJson cvsJson = null;
+		String[] line_splitted;
+		String text = null;
+		
 		Stage fileChooserStage = new Stage();
 		
 		FileChooser fileChooser = new FileChooser();
@@ -51,9 +58,47 @@ public class AdminController implements Initializable{
 		File selectedFile = fileChooser.showOpenDialog(fileChooserStage);
 		if(selectedFile!= null) {
 			//inserimento in mongodb
-			System.out.println(selectedFile.getName());
-		}
-		
+			try (BufferedReader reader = new BufferedReader(new FileReader(selectedFile))) {
+		        String line;
+		        BufferedReader rain = null;
+		        int i = 0;
+		        while ((line = reader.readLine()) != null) {
+		            i++;
+			        line_splitted = line.split(csv_split, -1);
+	            	
+			        cvsJson = new FromCsvToJson(line_splitted);
+	                String json = cvsJson.toJson().toString();
+	                json = json + "\n";
+	                
+                	text = json;
+	         		json = "";
+	         		for(int c = 0; c < line_splitted.length; c++)
+	         			line_splitted[c] = "";
+	            }
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+
+            System.out.println(text);
+            int ris = MongoHandler.insertFood(text);
+            
+			if(ris == 0) {
+				Alert windowAlert = new Alert(AlertType.WARNING);
+				windowAlert.setHeaderText(null);
+				windowAlert.setContentText("Something went wrong. Please try again!");
+				windowAlert.setTitle("Try again");
+				windowAlert.showAndWait();
+	        	return;
+			}
+			else {
+				Alert windowAlert = new Alert(AlertType.INFORMATION);
+				windowAlert.setHeaderText(null);
+				windowAlert.setContentText("File inserted correctly!");
+				windowAlert.setTitle("Complete");
+				windowAlert.showAndWait();
+	        	return;
+			}
+		}		
 	}
 	
 	//showing user's informations

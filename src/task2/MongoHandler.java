@@ -187,18 +187,10 @@ public class MongoHandler {
 		return food_list;
 	}
 	
-	public static void insertFood(String str) {
+	public static int insertFood(String str) {
 		collection = db.getCollection("dataModelArrAvg");
 		
 		JSONObject json = new JSONObject(str);
-//		name = csv[0];
-//		country_name = csv[1];
-//		year = csv[3];
-//		rain = csv[4];
-//		production = csv[5];
-//		temperature_avg = csv[6];
-//		temperature = csv[7];
-//		rainfall_avg = csv[8];
 		
 		Document doc = new Document("year", Integer.parseInt(json.getString("year")))
 				.append("rain", json.getString("rain"))
@@ -215,6 +207,7 @@ public class MongoHandler {
 													
 		UpdateResult result = collection.updateOne(filters, push_element); //Updates.addToSet("countries.years", updateQuery));
 		System.out.println(result.getModifiedCount());
+		return (int) result.getModifiedCount();
 	}
 	
 	
