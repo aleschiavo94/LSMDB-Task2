@@ -90,7 +90,7 @@ public class CompanyController implements Initializable {
 		    }
 
             System.out.println(text);
-            int ris = MongoHandler.insertFood(text);
+            int ris = MongoHandler.insertDocument(text);
             
 			if(ris == 0) {
 				Alert windowAlert = new Alert(AlertType.WARNING);

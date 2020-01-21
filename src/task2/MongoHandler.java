@@ -187,7 +187,7 @@ public class MongoHandler {
 		return food_list;
 	}
 	
-	public static int insertFood(String str) {
+	public static int insertDocument(String str) {
 		collection = db.getCollection("dataModelArrAvg");
 		
 		JSONObject json = new JSONObject(str);
