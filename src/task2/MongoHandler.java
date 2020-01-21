@@ -191,20 +191,38 @@ public class MongoHandler {
 		collection = db.getCollection("dataModelArrAvg");
 		
 		JSONObject json = new JSONObject(str);
+		Document query = null;
+		Document push_element = null;
 		
-		Document doc = new Document("year", Integer.parseInt(json.getString("year")))
-				.append("rain", json.getString("rain"))
-				.append("production", Integer.parseInt(json.getString("production")))
-				.append("temperature_avg", Double.parseDouble(json.getString("temperature_avg")))
-				.append("temperature", json.getString("temperature"))
-				.append("rainfall_avg", Double.parseDouble(json.getString("rainfall_avg")));
-	
-		Document query = new Document("countries.$.years", doc);
-		Document push_element = new Document("$push", query);
-		
-		//aggiungere controllo sullo stato se esiste
+		//controllo se esiste lo stato tra gli stati di quel food		
 		Bson filters = Filters.and(Filters.eq("name", json.getString("name")), Filters.eq("countries.country_name", json.getString("country_name")));
-													
+		Document document = collection.find(filters).first();
+				
+		if (document == null) {
+			Document doc2 = new Document("year", Integer.parseInt(json.getString("year")))
+					.append("rain", json.getString("rain"))
+					.append("production", Integer.parseInt(json.getString("production")))
+					.append("temperature_avg", Double.parseDouble(json.getString("temperature_avg")))
+					.append("temperature", json.getString("temperature"))
+					.append("rainfall_avg", Double.parseDouble(json.getString("rainfall_avg")));
+			Document doc1 = new Document("country_name", json.getString("country_name"))
+					.append("years", doc2);
+			
+			query = new Document("countries", doc1);
+			filters = Filters.eq("name", json.getString("name"));
+			
+		} else {
+			Document doc = new Document("year", Integer.parseInt(json.getString("year")))
+					.append("rain", json.getString("rain"))
+					.append("production", Integer.parseInt(json.getString("production")))
+					.append("temperature_avg", Double.parseDouble(json.getString("temperature_avg")))
+					.append("temperature", json.getString("temperature"))
+					.append("rainfall_avg", Double.parseDouble(json.getString("rainfall_avg")));
+		
+			query = new Document("countries.$.years", doc);
+		}
+		
+		push_element = new Document("$push", query);
 		UpdateResult result = collection.updateOne(filters, push_element); //Updates.addToSet("countries.years", updateQuery));
 		System.out.println(result.getModifiedCount());
 		return (int) result.getModifiedCount();
@@ -283,7 +301,7 @@ public class MongoHandler {
 				JSONObject country_result = new JSONObject();
 				obj = new JSONObject(documents.next().toJson());
 				JSONObject id = obj.getJSONObject("_id");
-//				System.out.println(i);
+				
 				country_result.put("AvgTemperature", obj.get("AvgTemperature"));
 				country_result.put("AvgPrecipitation", obj.get("AvgPrecipitation"));
 				country_result.put("TotalProduction", obj.getInt("TotalProduction"));
@@ -368,7 +386,7 @@ public class MongoHandler {
 				JSONObject country_result = new JSONObject();
 				obj = new JSONObject(documents.next().toJson());
 				JSONObject id = obj.getJSONObject("_id");
-				System.out.println(obj);
+				
 				country_result.put("AvgTemperature", obj.get("AvgTemperature"));
 				country_result.put("AvgPrecipitation", obj.get("AvgPrecipitation"));
 				country_result.put("AvgProduction", obj.get("AvgProduction"));
@@ -429,7 +447,6 @@ public class MongoHandler {
 				JSONObject country = new JSONObject();
 				obj = new JSONObject(cursor.next().toJson());
 				
-//				System.out.println(obj);
 				JSONObject id = obj.getJSONObject("_id");
 				country.put("Country", id.get("Country"));
 				country.put("TotalProduction", obj.get("TotalProduction"));
@@ -445,7 +462,6 @@ public class MongoHandler {
 		} finally {
 			cursor.close();
 		}
-		System.out.println(totalCountry);
 		return totalCountry;
 	}
 	
@@ -599,7 +615,6 @@ public class MongoHandler {
 						
 						if(d.has("import_qty"))
 							TotalImport += Integer.parseInt(d.get("import_qty").toString());
-						System.out.println(TotalImport);
 					}
 				}
 			}
@@ -657,7 +672,6 @@ public class MongoHandler {
 				Document document = null;
 				obj = new JSONObject(cursor.next().toJson());
 
-				System.out.println(obj);
 				JSONObject c = obj.getJSONObject("countries");
 				JSONObject y = c.getJSONObject("years");
 				JSONObject ie = null;
@@ -684,8 +698,6 @@ public class MongoHandler {
 					prev_country = c.getString("country_name");
 				}
 				
-				System.out.println(prev_country);
-				
 				if(y.has("rainfall_avg"))
 					AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
 				
@@ -696,13 +708,10 @@ public class MongoHandler {
 					document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
 					if (document == null) {
 					    //Document does not exist
-						System.out.println("NON ESISTE");
 					} else {
 						JSONObject d = new JSONObject(document.toJson());
-						System.out.println(d);
 						if(d.has("import_qty"))
 							AvgImport += Integer.parseInt(d.get("import_qty").toString());
-						System.out.println(AvgImport);
 					}
 				}
 			}
@@ -748,7 +757,7 @@ public class MongoHandler {
 			while (cursor.hasNext()) {
 				JSONObject country_result = new JSONObject();
 				obj = new JSONObject(cursor.next().toJson());
-				System.out.println(obj);
+				
 				JSONObject c = obj.getJSONObject("countries");
 				JSONObject y = c.getJSONObject("years");
 				JSONObject ie = null;
@@ -830,7 +839,6 @@ public class MongoHandler {
 				Document document = null;
 				obj = new JSONObject(cursor.next().toJson());
 
-				System.out.println(obj);
 				JSONObject c = obj.getJSONObject("countries");
 				JSONObject y = c.getJSONObject("years");
 				JSONObject ie = null;
@@ -841,7 +849,6 @@ public class MongoHandler {
 					prev_country = c.getString("country_name");
 					prev = 1;
 				}
-//				System.out.println(prev_country);
 				
 				if(!prev_country.equals(c.getString("country_name"))) {
 					country_result.put("AvgTemperature", AvgTemperature/year_selected);
@@ -868,13 +875,11 @@ public class MongoHandler {
 					document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
 					if (document == null) {
 					    //Document does not exist
-						System.out.println("NON ESISTE");
 					} else {
 						JSONObject d = new JSONObject(document.toJson());
 						
 						if(d.has("export_qty"))
 							TotalExport += Integer.parseInt(d.get("export_qty").toString());
-//						System.out.println(TotalExport);
 					}
 				}
 			}
@@ -931,7 +936,6 @@ public class MongoHandler {
 				Document document = null;
 				obj = new JSONObject(cursor.next().toJson());
 
-				System.out.println(obj);
 				JSONObject c = obj.getJSONObject("countries");
 				JSONObject y = c.getJSONObject("years");
 				JSONObject ie = null;
@@ -958,7 +962,6 @@ public class MongoHandler {
 					prev_country = c.getString("country_name");
 				}
 				
-				System.out.println(prev_country);
 				
 				if(y.has("rainfall_avg"))
 					AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
@@ -970,13 +973,10 @@ public class MongoHandler {
 					document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
 					if (document == null) {
 					    //Document does not exist
-						System.out.println("NON ESISTE");
 					} else {
 						JSONObject d = new JSONObject(document.toJson());
-						System.out.println(d);
-						if(d.has("import_qty"))
-							AvgExport += Integer.parseInt(d.get("import_qty").toString());
-						System.out.println(AvgExport);
+						if(d.has("export_qty"))
+							AvgExport += Integer.parseInt(d.get("export_qty").toString());
 					}
 				}
 			}

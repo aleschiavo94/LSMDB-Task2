@@ -60,9 +60,9 @@ public class ResultController implements Initializable {
 			}
 			else if(aggregation.contentEquals("Average")) {
 				if(region != null)
-					TotalExport = MongoHandler.getAverageRegionExport(food,region,start,end);
+					AvgExport = MongoHandler.getAverageRegionExport(food,region,start,end);
 				else
-					TotalExport = MongoHandler.getTotalCountryExport(food,country,start,end);
+					AvgExport = MongoHandler.getTotalCountryExport(food,country,start,end);
 				System.out.println(AvgExport);
 			}
 		}
