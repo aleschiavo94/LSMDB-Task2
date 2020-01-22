@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane prefHeight="539.0" prefWidth="711.0" style="-fx-background-image: url(&quot;sfondo7biss.jpg&quot;); -fx-background-size: cover;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="task2.DocumentController">
+   <children>
+      <Label layoutX="307.0" layoutY="26.0" prefHeight="40.0" prefWidth="378.0" text="World food distribution" textFill="#f2a501">
+         <font>
+            <Font name="Maiandra GD" size="33.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="food_comboBox" layoutX="309.0" layoutY="110.0" prefHeight="38.0" prefWidth="126.0" promptText="Food" visibleRowCount="100" />
+      <RadioButton fx:id="rb_production" layoutX="465.0" layoutY="110.0" mnemonicParsing="false" text="Production" textFill="#f2a501">
+         <font>
+            <Font name="Maiandra GD" size="18.0" />
+         </font>
+      </RadioButton>
+      <RadioButton fx:id="rb_import" layoutX="465.0" layoutY="140.0" mnemonicParsing="false" text="Import" textFill="#f2a501">
+         <font>
+            <Font name="Maiandra GD" size="18.0" />
+         </font>
+      </RadioButton>
+      <RadioButton fx:id="rb_export" layoutX="465.0" layoutY="170.0" mnemonicParsing="false" text="Export" textFill="#f2a501">
+         <font>
+            <Font name="Maiandra GD" size="18.0" />
+         </font>
+      </RadioButton>
+      <ComboBox fx:id="continent_comboBox" layoutX="309.0" layoutY="218.0" prefHeight="38.0" prefWidth="126.0" promptText="Region" />
+      <TextField fx:id="search_field" layoutX="471.0" layoutY="229.0" prefHeight="27.0" prefWidth="126.0" promptText="Search" />
+      <TextField fx:id="start_date" layoutX="309.0" layoutY="288.0" prefHeight="40.0" prefWidth="126.0" promptText="Start year" />
+      <TextField fx:id="end_date" layoutX="471.0" layoutY="288.0" prefHeight="40.0" prefWidth="126.0" promptText="End year" />
+      <ComboBox fx:id="aggregation" layoutX="309.0" layoutY="359.0" prefHeight="38.0" prefWidth="126.0" promptText="Aggregation" />
+      <Button layoutX="498.0" layoutY="360.0" mnemonicParsing="false" onAction="#submit" style="-fx-background-color: #eaa822;" text="Submit" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Label layoutX="375.0" layoutY="427.0" prefHeight="40.0" prefWidth="193.0" text="Are you a company?" textAlignment="CENTER" textFill="#f2a501">
+         <font>
+            <Font name="Maiandra GD" size="21.0" />
+         </font>
+      </Label>
+      <Button layoutX="374.0" layoutY="475.0" mnemonicParsing="false" onAction="#signup" style="-fx-background-color: #eaa822;" text="Sign up" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Button layoutX="496.0" layoutY="475.0" mnemonicParsing="false" onAction="#login" style="-fx-background-color: #eaa822;" text="Login" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Label layoutX="471.0" layoutY="213.0" text="Search by country" textFill="WHITE">
+         <font>
+            <Font name="System Italic" size="12.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>
