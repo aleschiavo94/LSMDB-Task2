@@ -1,14 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="500.0" prefWidth="900.0" style="-fx-background-image: url(&quot;food.jpg&quot;); -fx-background-size: contain;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="task2.ResultController">
+<Pane fx:id="parameterChart" prefHeight="565.0" prefWidth="1114.0" style="-fx-background-image: url(&quot;food.jpg&quot;); -fx-background-size: contain;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="task2.ResultController">
    <children>
       <Label layoutX="23.0" layoutY="8.0" prefHeight="43.0" prefWidth="222.0" text="Analysis result" textFill="#f2a501">
          <font>
             <Font name="Maiandra GD" size="35.0" />
+         </font>
+      </Label>
+      <BarChart fx:id="parameterChart" layoutX="14.0" layoutY="137.0" prefHeight="267.0" prefWidth="354.0">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" />
+        </yAxis>
+      </BarChart>
+      <BarChart fx:id="tempChart" layoutX="392.0" layoutY="137.0" prefHeight="267.0" prefWidth="354.0">
+         <xAxis>
+            <CategoryAxis side="BOTTOM" />
+         </xAxis>
+         <yAxis>
+            <NumberAxis side="LEFT" />
+         </yAxis>
+      </BarChart>
+      <BarChart fx:id="rainChart" layoutX="746.0" layoutY="137.0" prefHeight="267.0" prefWidth="354.0">
+         <xAxis>
+            <CategoryAxis side="BOTTOM" />
+         </xAxis>
+         <yAxis>
+            <NumberAxis side="LEFT" />
+         </yAxis>
+      </BarChart>
+      <Label fx:id="parameterLabel" layoutX="127.0" layoutY="89.0" prefHeight="43.0" prefWidth="222.0" textAlignment="CENTER">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="548.0" layoutY="89.0" prefHeight="43.0" prefWidth="155.0" text="Temperature" textAlignment="CENTER">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="876.0" layoutY="89.0" prefHeight="43.0" prefWidth="141.0" text="Precipitation" textAlignment="CENTER">
+         <font>
+            <Font size="24.0" />
          </font>
       </Label>
    </children>
