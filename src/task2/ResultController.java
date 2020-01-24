@@ -46,6 +46,7 @@ public class ResultController implements Initializable {
 	@FXML private Label parameterLabel;
 	
 	private List<ResultSearchObject> results;
+	
 	public void initResult(String food, String region, String country, String aim, String start, String end, String aggregation) {
 		JSONArray pointer = null;
 		
@@ -153,6 +154,7 @@ public class ResultController implements Initializable {
         parameterChart.getData().add(paramSeries);
         rainChart.getData().add(rainSeries);
         tempChart.getData().add(tempSeries);
+        
        
 	}
 }

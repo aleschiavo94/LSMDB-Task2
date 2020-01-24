@@ -7,50 +7,68 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="779.0" prefWidth="1114.0" style="-fx-background-image: url(&quot;food.jpg&quot;); -fx-background-size: contain;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="task2.ResultController">
+<Pane prefHeight="670.0" prefWidth="1005.0" style="-fx-background-image: url(&quot;salsa.jpg&quot;); -fx-background-size: contain;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="task2.ResultController">
    <children>
-      <Label layoutX="23.0" layoutY="8.0" prefHeight="43.0" prefWidth="222.0" text="Analysis result" textFill="#f2a501">
+      <Label layoutX="410.0" prefHeight="43.0" prefWidth="222.0" text="Analysis result" textFill="#f2a501">
          <font>
             <Font name="Maiandra GD" size="35.0" />
          </font>
       </Label>
-      <BarChart fx:id="parameterChart" layoutX="14.0" layoutY="137.0" prefHeight="267.0" prefWidth="354.0">
+      <BarChart fx:id="parameterChart" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" layoutX="511.0" layoutY="88.0" prefHeight="254.0" prefWidth="327.0" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
         <xAxis>
-          <CategoryAxis fx:id="param_yearX" side="BOTTOM" />
+          <CategoryAxis fx:id="param_yearX" prefHeight="39.0" prefWidth="270.0" side="BOTTOM" tickLabelFill="#f2a501" tickLabelRotation="90.0">
+               <tickLabelFont>
+                  <Font size="12.0" />
+               </tickLabelFont></CategoryAxis>
         </xAxis>
         <yAxis>
-          <NumberAxis fx:id="param_valueY" side="LEFT" />
+          <NumberAxis fx:id="param_valueY" side="LEFT" tickLabelFill="#f2a501">
+               <tickLabelFont>
+                  <Font size="12.0" />
+               </tickLabelFont></NumberAxis>
         </yAxis>
       </BarChart>
-      <BarChart fx:id="tempChart" layoutX="396.0" layoutY="132.0" prefHeight="267.0" prefWidth="354.0">
+      <BarChart fx:id="tempChart" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" layoutX="277.0" layoutY="378.0" prefHeight="254.0" prefWidth="327.0" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
          <xAxis>
-            <CategoryAxis fx:id="temp_yearX" side="BOTTOM" />
+            <CategoryAxis fx:id="temp_yearX" side="BOTTOM" tickLabelFill="#f2a501" tickLabelRotation="90.0">
+               <tickLabelFont>
+                  <Font size="12.0" />
+               </tickLabelFont></CategoryAxis>
          </xAxis>
          <yAxis>
-            <NumberAxis fx:id="temp_valueY" side="LEFT" />
+            <NumberAxis fx:id="temp_valueY" side="LEFT" tickLabelFill="#f2a501">
+               <tickLabelFont>
+                  <Font size="12.0" />
+               </tickLabelFont></NumberAxis>
          </yAxis>
       </BarChart>
-      <BarChart fx:id="rainChart" layoutX="746.0" layoutY="137.0" prefHeight="267.0" prefWidth="354.0">
+      <BarChart fx:id="rainChart" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" layoutX="606.0" layoutY="378.0" prefHeight="254.0" prefWidth="327.0" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
          <xAxis>
-            <CategoryAxis fx:id="rain_yearX" side="BOTTOM" />
+            <CategoryAxis fx:id="rain_yearX" side="BOTTOM" tickLabelFill="#f2a501" tickLabelRotation="90.0">
+               <tickLabelFont>
+                  <Font size="12.0" />
+               </tickLabelFont></CategoryAxis>
          </xAxis>
          <yAxis>
-            <NumberAxis fx:id="rain_valueY" side="LEFT" />
+            <NumberAxis fx:id="rain_valueY" side="LEFT" tickLabelFill="#f2a501">
+               <tickLabelFont>
+                  <Font size="12.0" />
+               </tickLabelFont></NumberAxis>
          </yAxis>
       </BarChart>
-      <Label fx:id="parameterLabel" layoutX="127.0" layoutY="89.0" prefHeight="43.0" prefWidth="222.0" textAlignment="CENTER">
+      <Label layoutX="391.0" layoutY="347.0" prefHeight="43.0" prefWidth="163.0" text="Temperature" textFill="#f2a501">
          <font>
-            <Font size="24.0" />
+            <Font name="Maiandra GD" size="25.0" />
          </font>
       </Label>
-      <Label layoutX="495.0" layoutY="67.0" prefHeight="43.0" prefWidth="155.0" text="Temperature" textAlignment="CENTER">
+      <Label layoutX="719.0" layoutY="347.0" prefHeight="43.0" prefWidth="163.0" text="Precipitations" textFill="#f2a501">
          <font>
-            <Font size="24.0" />
+            <Font name="Maiandra GD" size="25.0" />
          </font>
       </Label>
-      <Label layoutX="876.0" layoutY="89.0" prefHeight="43.0" prefWidth="141.0" text="Precipitation" textAlignment="CENTER">
+      <Label fx:id="parameterLabel" alignment="CENTER" layoutX="521.0" layoutY="63.0" prefHeight="43.0" prefWidth="342.0" textFill="#f2a501">
          <font>
-            <Font size="24.0" />
+            <Font name="Maiandra GD" size="25.0" />
          </font>
       </Label>
    </children>

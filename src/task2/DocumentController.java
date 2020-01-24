@@ -28,15 +28,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class DocumentController implements Initializable {
-	//live search
+	//country search
 	@FXML private TextField search_field;
 	
-	//start and end date
-//	@FXML private DatePicker start_date;
-//	@FXML private DatePicker end_date;
-//		private LocalDate start_period;
-//		private LocalDate end_period;
-	
+	//date fields
 	@FXML private TextField start_date;
 	@FXML private TextField end_date;
 		
@@ -72,7 +67,7 @@ public class DocumentController implements Initializable {
 		if(food_comboBox.getSelectionModel().isEmpty() || 
 			(continent_comboBox.getSelectionModel().isEmpty() && search_field.getLength() == 0) ||
 			aggregation.getSelectionModel().isEmpty() ||
-			!group.getSelectedToggle().isSelected() || 
+			group.getSelectedToggle()==null|| 
 			start_date.getLength() == 0 || end_date.getLength() == 0
 			) {
         	
