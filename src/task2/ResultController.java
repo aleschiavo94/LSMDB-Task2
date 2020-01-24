@@ -134,9 +134,6 @@ public class ResultController implements Initializable {
 	//Format parameter and insert in Charts
 	public void setPlots() {
 
-	
-
-		
 		XYChart.Series<String, Number> paramSeries = new XYChart.Series();
 		paramSeries.setName(results.get(0).getCountry()); 
         

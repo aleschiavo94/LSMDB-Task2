@@ -132,22 +132,26 @@ public class DocumentController implements Initializable {
 			
 			
 			//opening a new window with a new controller
-	        Stage dialogStage = new Stage();
-	        Scene scene;
-	        
-	        String resource = "ResultFXML.fxml";
-	        FXMLLoader loader = new FXMLLoader();
-	        loader.setLocation(getClass().getResource(resource));
-	        
-	        Parent root = (Parent) loader.load();
-	        
-	        ResultController controller = loader.getController();
-	        controller.initResult(food_selected, region_selected, search, radio_selected, start_year, end_year, aggregation_selected);
-	        
-			scene = new Scene(root);
-	        dialogStage.setTitle("Analysis result");
-	        dialogStage.setScene(scene);
-	        dialogStage.show();
+			if(!aggregation.getSelectionModel().getSelectedItem().toString().equals("Top 5")) {
+		        Stage dialogStage = new Stage();
+		        Scene scene;
+		        
+		        String resource = "ResultFXML.fxml";
+		        FXMLLoader loader = new FXMLLoader();
+		        loader.setLocation(getClass().getResource(resource));
+		        
+		        Parent root = (Parent) loader.load();
+		        
+		        ResultController controller = loader.getController();
+		        controller.initResult(food_selected, region_selected, search, radio_selected, start_year, end_year, aggregation_selected);
+		        
+				scene = new Scene(root);
+		        dialogStage.setTitle("Analysis result");
+		        dialogStage.setScene(scene);
+		        dialogStage.show();
+			}else {
+				System.out.println("TOP 5 NON IMPLEMENTATA ");
+			}
 		}
         		
         //ResultController controller = loader.getController();
