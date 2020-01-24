@@ -22,6 +22,8 @@ public class ResultSearchObject implements Comparable<ResultSearchObject> {
 			parameterSought = json.getInt("Import");
 		if(json.has("Export"))
 			parameterSought = json.getInt("Export");
+		if(json.has("AvgProduction"))
+			parameterSought = json.getInt("AvgProduction");
 		
 	}
 
