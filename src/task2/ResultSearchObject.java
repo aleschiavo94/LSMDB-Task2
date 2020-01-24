@@ -2,7 +2,7 @@ package task2;
 
 import org.json.JSONObject;
 
-public class ResultSearchObject {
+public class ResultSearchObject implements Comparable<ResultSearchObject> {
 	private String country;
 	private double avgTemp;
 	private double avgRain;
@@ -22,7 +22,33 @@ public class ResultSearchObject {
 			parameterSought = json.getInt("Import");
 		if(json.has("Export"))
 			parameterSought = json.getInt("Export");
+		if(json.has("AvgProduction"))
+			parameterSought = json.getInt("AvgProduction");
 		
 	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public double getAvgTemp() {
+		return avgTemp;
+	}
+
+	public double getAvgRain() {
+		return avgRain;
+	}
+
+	public int getYear() {
+		return year;
+	}
+
+	public int getParameterSought() {
+		return parameterSought;
+	}
 	
+	@Override
+	public int compareTo(ResultSearchObject r) {
+		return this.year - r.getYear();
+	}
 }

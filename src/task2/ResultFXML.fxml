@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="parameterChart" prefHeight="565.0" prefWidth="1114.0" style="-fx-background-image: url(&quot;food.jpg&quot;); -fx-background-size: contain;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="task2.ResultController">
+<Pane prefHeight="779.0" prefWidth="1114.0" style="-fx-background-image: url(&quot;food.jpg&quot;); -fx-background-size: contain;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="task2.ResultController">
    <children>
       <Label layoutX="23.0" layoutY="8.0" prefHeight="43.0" prefWidth="222.0" text="Analysis result" textFill="#f2a501">
          <font>
@@ -16,26 +16,26 @@
       </Label>
       <BarChart fx:id="parameterChart" layoutX="14.0" layoutY="137.0" prefHeight="267.0" prefWidth="354.0">
         <xAxis>
-          <CategoryAxis side="BOTTOM" />
+          <CategoryAxis fx:id="param_yearX" side="BOTTOM" />
         </xAxis>
         <yAxis>
-          <NumberAxis side="LEFT" />
+          <NumberAxis fx:id="param_valueY" side="LEFT" />
         </yAxis>
       </BarChart>
-      <BarChart fx:id="tempChart" layoutX="392.0" layoutY="137.0" prefHeight="267.0" prefWidth="354.0">
+      <BarChart fx:id="tempChart" layoutX="396.0" layoutY="132.0" prefHeight="267.0" prefWidth="354.0">
          <xAxis>
-            <CategoryAxis side="BOTTOM" />
+            <CategoryAxis fx:id="temp_yearX" side="BOTTOM" />
          </xAxis>
          <yAxis>
-            <NumberAxis side="LEFT" />
+            <NumberAxis fx:id="temp_valueY" side="LEFT" />
          </yAxis>
       </BarChart>
       <BarChart fx:id="rainChart" layoutX="746.0" layoutY="137.0" prefHeight="267.0" prefWidth="354.0">
          <xAxis>
-            <CategoryAxis side="BOTTOM" />
+            <CategoryAxis fx:id="rain_yearX" side="BOTTOM" />
          </xAxis>
          <yAxis>
-            <NumberAxis side="LEFT" />
+            <NumberAxis fx:id="rain_valueY" side="LEFT" />
          </yAxis>
       </BarChart>
       <Label fx:id="parameterLabel" layoutX="127.0" layoutY="89.0" prefHeight="43.0" prefWidth="222.0" textAlignment="CENTER">
@@ -43,7 +43,7 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Label layoutX="548.0" layoutY="89.0" prefHeight="43.0" prefWidth="155.0" text="Temperature" textAlignment="CENTER">
+      <Label layoutX="495.0" layoutY="67.0" prefHeight="43.0" prefWidth="155.0" text="Temperature" textAlignment="CENTER">
          <font>
             <Font size="24.0" />
          </font>

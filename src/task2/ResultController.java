@@ -3,6 +3,7 @@ package task2;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -11,6 +12,9 @@ import org.json.JSONObject;
 
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.fxml.FXML;
 
@@ -25,9 +29,19 @@ public class ResultController implements Initializable {
 	private JSONArray AvgExport = new JSONArray();
 
 	
-	@FXML private BarChart<String, Integer>  parameterChart;
-	@FXML private BarChart<String, Double> tempChart;
-	@FXML private BarChart<String, Double> rainChart;
+	@FXML private BarChart<String, Number>  parameterChart;
+	@FXML private BarChart<String, Number> tempChart;
+	@FXML private BarChart<String, Number> rainChart;
+	
+	@FXML private CategoryAxis param_yearX;
+	@FXML private NumberAxis param_valueY;
+	
+	
+	@FXML private CategoryAxis temp_yearX;
+	@FXML private NumberAxis temp_valueY;
+	
+	@FXML private CategoryAxis rain_yearX;
+	@FXML private NumberAxis rain_valueY;
 	
 	@FXML private Label parameterLabel;
 	
@@ -104,8 +118,9 @@ public class ResultController implements Initializable {
 			for(int i = 0; i < pointer.length(); i++) {
 				json = pointer.getJSONObject(i);
 				results.add(new ResultSearchObject(json));
+				
 			}
-			System.out.println(" exit from for " + results.size());
+			Collections.sort(results);
 			setPlots();
 		}
 		
@@ -113,10 +128,31 @@ public class ResultController implements Initializable {
 	
 	@Override
 	 public void initialize(URL url, ResourceBundle rb) {
+		
 	}
 	
 	//Format parameter and insert in Charts
 	public void setPlots() {
+
+		XYChart.Series<String, Number> paramSeries = new XYChart.Series();
+		paramSeries.setName(results.get(0).getCountry()); 
+        
+		XYChart.Series<String, Number> tempSeries = new XYChart.Series();
+		tempSeries.setName(results.get(0).getCountry()); 
+        
+		XYChart.Series<String, Number> rainSeries = new XYChart.Series();
+		rainSeries.setName(results.get(0).getCountry()); 
 		
+		ResultSearchObject pointer = null;
+		for(int i = 0; i < results.size(); i++) {
+			pointer = results.get(i);
+			paramSeries.getData().add(new XYChart.Data(Integer.toString(pointer.getYear()), pointer.getParameterSought()));
+			tempSeries.getData().add(new XYChart.Data(Integer.toString(pointer.getYear()), pointer.getAvgTemp()));
+			rainSeries.getData().add(new XYChart.Data(Integer.toString(pointer.getYear()), pointer.getAvgRain()));
+		}
+        parameterChart.getData().add(paramSeries);
+        rainChart.getData().add(rainSeries);
+        tempChart.getData().add(tempSeries);
+       
 	}
 }
