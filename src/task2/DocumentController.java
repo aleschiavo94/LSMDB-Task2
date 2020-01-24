@@ -150,7 +150,7 @@ public class DocumentController implements Initializable {
 	        dialogStage.show();
 		}
         		
-        //ResultController controller = loader.getController();
+        
               
          
 	}
