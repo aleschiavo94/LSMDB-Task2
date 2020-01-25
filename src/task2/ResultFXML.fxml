@@ -3,11 +3,12 @@
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="670.0" prefWidth="1005.0" style="-fx-background-image: url(&quot;salsa.jpg&quot;); -fx-background-size: contain;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="task2.ResultController">
+<Pane prefHeight="670.0" prefWidth="1005.0" style="-fx-background-image: url(&quot;salsa.jpg&quot;); -fx-background-size: contain;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="task2.ResultController">
    <children>
       <Label layoutX="410.0" prefHeight="43.0" prefWidth="222.0" text="Analysis result" textFill="#f2a501">
          <font>
@@ -56,12 +57,12 @@
                </tickLabelFont></NumberAxis>
          </yAxis>
       </BarChart>
-      <Label layoutX="391.0" layoutY="347.0" prefHeight="43.0" prefWidth="163.0" text="Temperature" textFill="#f2a501">
+      <Label layoutX="391.0" layoutY="347.0" prefHeight="43.0" prefWidth="203.0" text="Temperature (C°)" textFill="#f2a501">
          <font>
             <Font name="Maiandra GD" size="25.0" />
          </font>
       </Label>
-      <Label layoutX="719.0" layoutY="347.0" prefHeight="43.0" prefWidth="163.0" text="Precipitations" textFill="#f2a501">
+      <Label layoutX="719.0" layoutY="347.0" prefHeight="43.0" prefWidth="222.0" text="Precipitations (mm)" textFill="#f2a501">
          <font>
             <Font name="Maiandra GD" size="25.0" />
          </font>
@@ -71,5 +72,8 @@
             <Font name="Maiandra GD" size="25.0" />
          </font>
       </Label>
+      <Label fx:id="objectiveLabel" layoutX="68.0" layoutY="400.0" prefHeight="17.0" prefWidth="102.0" style="-fx-background-color: orange;" text="_" />
+      <Label fx:id="resultLabel" layoutX="68.0" layoutY="435.0" prefHeight="17.0" prefWidth="102.0" style="-fx-background-color: orange;" text="_" textAlignment="CENTER" />
+      <PieChart fx:id="pieChart" layoutX="44.0" layoutY="71.0" prefHeight="254.0" prefWidth="310.0" style="-fx-background-color: yellow;" title="Pie Chart" />
    </children>
 </Pane>

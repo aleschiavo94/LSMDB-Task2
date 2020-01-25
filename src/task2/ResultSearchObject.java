@@ -8,13 +8,13 @@ public class ResultSearchObject implements Comparable<ResultSearchObject> {
 	private double avgRain;
 	private int year;
 	private int parameterSought;
-	
 	public ResultSearchObject(JSONObject json) {
 		
 		country = json.getString("Country");
 		avgTemp = json.getDouble("AvgTemperature");
 		avgRain = json.getDouble("AvgPrecipitation");
-		year = json.getInt("Year");
+		if(json.has("Year"))
+			year = json.getInt("Year");
 		
 		if(json.has("TotalProduction"))
 			parameterSought = json.getInt("TotalProduction");

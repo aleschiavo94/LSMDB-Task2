@@ -127,7 +127,7 @@ public class DocumentController implements Initializable {
 			
 			
 			//opening a new window with a new controller
-			if(!aggregation.getSelectionModel().getSelectedItem().toString().equals("Top 5")) {
+			//if(!aggregation.getSelectionModel().getSelectedItem().toString().equals("Top 5")) {
 		        Stage dialogStage = new Stage();
 		        Scene scene;
 		        
@@ -144,9 +144,9 @@ public class DocumentController implements Initializable {
 		        dialogStage.setTitle("Analysis result");
 		        dialogStage.setScene(scene);
 		        dialogStage.show();
-			}else {
+			/*}else {
 				System.out.println("TOP 5 NON IMPLEMENTATA ");
-			}
+			}*/
 		}
         		
         
