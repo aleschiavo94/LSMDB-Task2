@@ -540,7 +540,7 @@ public class MongoHandler {
 	public static JSONArray getTotalRegionImport(String food, String region, String start, String end) {
 		collection = db.getCollection("dataModelArrAvg");
 		ie_collection = db.getCollection("impExpInfo");
-		int TotalImport = 0;
+		Double TotalImport = 0.0;
 		Double AvgPrecipitation = 0.0;
 		Double AvgTemperature = 0.0;
 		Double year_selected = (Double.parseDouble(end) - Double.parseDouble(start)) + 1.0;
@@ -598,7 +598,7 @@ public class MongoHandler {
 					i++;
 					AvgTemperature = 0.0;
 					AvgPrecipitation = 0.0;
-					TotalImport = 0;
+					TotalImport = 0.0;
 
 					prev_country = c.getString("country_name");
 				}
@@ -617,7 +617,7 @@ public class MongoHandler {
 						JSONObject d = new JSONObject(document.toJson());
 						
 						if(d.has("import_qty"))
-							TotalImport += Integer.parseInt(d.get("import_qty").toString());
+							TotalImport += Double.parseDouble(d.get("import_qty").toString());
 					}
 				}
 			}
@@ -714,7 +714,7 @@ public class MongoHandler {
 					} else {
 						JSONObject d = new JSONObject(document.toJson());
 						if(d.has("import_qty"))
-							AvgImport += Integer.parseInt(d.get("import_qty").toString());
+							AvgImport += Double.parseDouble(d.get("import_qty").toString());
 					}
 				}
 			}
@@ -806,7 +806,7 @@ public class MongoHandler {
 	public static JSONArray getTotalRegionExport(String food, String region, String start, String end) {
 		collection = db.getCollection("dataModelArrAvg");
 		ie_collection = db.getCollection("impExpInfo");
-		int TotalExport = 0;
+		Double TotalExport = 0.0;
 		Double AvgPrecipitation = 0.0;
 		Double AvgTemperature = 0.0;
 		Double year_selected = (Double.parseDouble(end) - Double.parseDouble(start)) + 1.0;
@@ -865,7 +865,7 @@ public class MongoHandler {
 					i++;
 					AvgTemperature = 0.0;
 					AvgPrecipitation = 0.0;
-					TotalExport = 0;
+					TotalExport = 0.0;
 
 					prev_country = c.getString("country_name");
 				}
@@ -884,7 +884,7 @@ public class MongoHandler {
 						JSONObject d = new JSONObject(document.toJson());
 						
 						if(d.has("export_qty"))
-							TotalExport += Integer.parseInt(d.get("export_qty").toString());
+							TotalExport +=  Double.parseDouble(d.get("export_qty").toString());
 					}
 				}
 			}
@@ -981,7 +981,7 @@ public class MongoHandler {
 					} else {
 						JSONObject d = new JSONObject(document.toJson());
 						if(d.has("export_qty"))
-							AvgExport += Integer.parseInt(d.get("export_qty").toString());
+							AvgExport +=  Double.parseDouble(d.get("export_qty").toString());
 					}
 				}
 			}
