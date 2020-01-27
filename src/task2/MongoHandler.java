@@ -387,9 +387,12 @@ public class MongoHandler {
 				obj = new JSONObject(documents.next().toJson());
 				JSONObject id = obj.getJSONObject("_id");
 				
+				if(obj.get("AvgProduction").toString().equals("null"))
+					country_result.put("AvgProduction", 0.0);
+				else
+					country_result.put("AvgProduction", obj.get("AvgProduction"));
 				country_result.put("AvgTemperature", obj.get("AvgTemperature"));
 				country_result.put("AvgPrecipitation", obj.get("AvgPrecipitation"));
-				country_result.put("AvgProduction", obj.get("AvgProduction"));
 				if(id.has("Year"))
 					country_result.put("Year", id.getInt("Year"));
 				country_result.put("Country", id.getString("Country"));
