@@ -411,6 +411,7 @@ public class MongoHandler {
 			while (documents.hasNext()) {
 				JSONObject country_result = new JSONObject();
 				obj = new JSONObject(documents.next().toJson());
+				System.out.println(obj);
 				JSONObject id = obj.getJSONObject("_id");
 				
 				if(obj.get("AvgProduction").toString().equals("null"))
@@ -503,6 +504,7 @@ public class MongoHandler {
 		} finally {
 			cursor.close();
 		}
+		System.out.println(totalCountry);
 		return totalCountry;
 	}
 	
