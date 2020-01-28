@@ -10,6 +10,10 @@ public class FromCsvToJson {
 	private String rainfall_avg;
 	private String temperature;
 	private String rain;
+	private String import_qty;
+	private String import_value;
+	private String export_qty;
+	private String export_value;
 
 	public FromCsvToJson(String[] csv) {
 		name = csv[0];
@@ -20,6 +24,10 @@ public class FromCsvToJson {
 		temperature_avg = csv[5];
 		temperature = csv[6];
 		rainfall_avg = csv[7];
+		import_qty = csv[8];
+		import_value = csv[9];
+		export_qty = csv[10];
+		export_value = csv[11];
 	}
 	
 	public FromCsvToJson(JSONObject json) {
@@ -31,6 +39,10 @@ public class FromCsvToJson {
 		this.temperature_avg = json.getString("temperature_avg");
 		this.temperature = json.getString("temperature");
 		this.rainfall_avg = json.getString("rainfall_avg");
+		this.import_qty = json.getString("import_qty");
+		this.import_value = json.getString("import_value");
+		this.export_qty = json.getString("export_qty");
+		this.export_value = json.getString("export_value");
 	}
 	
 	public JSONObject toJson() {
@@ -42,7 +54,11 @@ public class FromCsvToJson {
 		json.put("production", production);
 		json.put("temperature_avg", temperature_avg);
 		json.put("temperature", temperature);
-		json.put("rainfall_avg", rainfall_avg);			
+		json.put("rainfall_avg", rainfall_avg);
+		json.put("import_qty", import_qty);
+		json.put("import_value", import_value);
+		json.put("export_qty", export_qty);
+		json.put("export_value", export_value);
 		return json;
 	}
 	
@@ -69,5 +85,17 @@ public class FromCsvToJson {
 	}
 	public String getRainfallAvg() {
 		return this.rainfall_avg;
+	}
+	public String getImportQty() {
+		return this.import_qty;
+	}
+	public String getImportValue() {
+		return this.import_value;
+	}
+	public String getExportQty() {
+		return this.export_qty;
+	}
+	public String getExportValue() {
+		return this.export_value;
 	}
 }

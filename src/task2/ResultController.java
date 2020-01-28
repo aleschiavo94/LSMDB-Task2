@@ -85,7 +85,7 @@ public class ResultController implements Initializable {
 		}
 		else if(aim.equals("Import")) {
 			if(aggregation.equals("Sum")) {
-				if(region != null)
+				if(region != null && country == null)
 					TotalImport = MongoHandler.getTotalRegionImport(food,region,start,end);
 				else
 					TotalImport = MongoHandler.getTotalCountryImport(food,country,start,end);
@@ -117,7 +117,7 @@ public class ResultController implements Initializable {
 				objectiveLabel.setText("Total Export Value: ");
 			}
 			else if(aggregation.contentEquals("Average")) {
-				if(region != null)
+				if(region != null && country == null)
 					AvgExport = MongoHandler.getAverageRegionExport(food,region,start,end);
 				else
 					AvgExport = MongoHandler.getTotalCountryExport(food,country,start,end);

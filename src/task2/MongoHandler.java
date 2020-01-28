@@ -188,12 +188,29 @@ public class MongoHandler {
 	}
 	
 	public static int insertDocument(String str) {
-		collection = db.getCollection("dataModelArrAvg");
-		
 		JSONObject json = new JSONObject(str);
 		Document query = null;
 		Document push_element = null;
 		
+		ie_collection = db.getCollection("impExpInfo");
+		
+		//inserisco l'import e l'export
+		Document imp_exp = new Document();
+		if(!json.getString("import_qty").equals("0.0"))
+			imp_exp.append("import_qty", Double.parseDouble(json.getString("import_qty")));
+		if(!json.getString("import_value").equals("0.0"))
+			imp_exp.append("import_value", Double.parseDouble(json.getString("import_value")));
+		if(!json.getString("export_qty").equals("0.0"))
+			imp_exp.append("export_qty", Double.parseDouble(json.getString("export_qty")));
+		if(!json.getString("export_value").equals("0.0"))
+			imp_exp.append("export_value", Double.parseDouble(json.getString("export_value")));
+		
+		System.out.println(imp_exp);
+
+		ie_collection.insertOne(imp_exp);
+		ObjectId id_ie = imp_exp.getObjectId("_id");
+		
+		collection = db.getCollection("dataModelArrAvg");
 		//controllo se esiste lo stato tra gli stati di quel food		
 		Bson filters = Filters.and(Filters.eq("name", json.getString("name")), Filters.eq("countries.country_name", json.getString("country_name")));
 		Document document = collection.find(filters).first();
@@ -204,7 +221,8 @@ public class MongoHandler {
 					.append("production", Integer.parseInt(json.getString("production")))
 					.append("temperature_avg", Double.parseDouble(json.getString("temperature_avg")))
 					.append("temperature", json.getString("temperature"))
-					.append("rainfall_avg", Double.parseDouble(json.getString("rainfall_avg")));
+					.append("rainfall_avg", Double.parseDouble(json.getString("rainfall_avg")))
+					.append("id_ie", id_ie);
 			Document doc1 = new Document("country_name", json.getString("country_name"))
 					.append("years", doc2);
 			
