@@ -152,7 +152,7 @@ public class ResultController implements Initializable {
 						res += results.get(i).getParameterSought();
 					resultLabel.setText(Integer.toString(res));
 				}
-			setPlots(region);
+			setPlots(country);
 		}
 		
 	}
@@ -163,11 +163,11 @@ public class ResultController implements Initializable {
 	}
 	
 	//Format parameter and insert in Charts
-	public void setPlots(String region) {
+	public void setPlots(String country) {
 
 		ResultSearchObject pointer = null;
 		
-		if(!top5 && region == null) {
+		if(!top5 && country != null) {
 			pieChart.setVisible(false);
 			XYChart.Series<String, Number> paramSeries = new XYChart.Series();
 			paramSeries.setName(results.get(0).getCountry()); 
@@ -186,7 +186,7 @@ public class ResultController implements Initializable {
 	        parameterChart.getData().add(paramSeries);
 	        rainChart.getData().add(rainSeries);
 	        tempChart.getData().add(tempSeries);
-		}else {
+		}else{
 			
 			setPlotsTop5();
 		}
