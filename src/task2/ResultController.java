@@ -11,8 +11,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javafx.fxml.Initializable;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
@@ -33,8 +35,8 @@ public class ResultController implements Initializable {
 
 	
 	@FXML private BarChart<String, Number>  parameterChart;
-	@FXML private BarChart<String, Number> tempChart;
-	@FXML private BarChart<String, Number> rainChart;
+	@FXML private LineChart tempChart;
+	@FXML private LineChart rainChart;
 	
 	@FXML private CategoryAxis param_yearX;
 	@FXML private NumberAxis param_valueY;
@@ -152,7 +154,7 @@ public class ResultController implements Initializable {
 						res += results.get(i).getParameterSought();
 					resultLabel.setText(Integer.toString(res));
 				}
-			setPlots(region);
+			setPlots(country);
 		}
 		
 	}
@@ -162,15 +164,17 @@ public class ResultController implements Initializable {
 		
 	}
 	
+	
 	//Format parameter and insert in Charts
-	public void setPlots(String region) {
+	public void setPlots(String country) {
 		pieChart.setLabelsVisible(false);
 		pieChart.setLabelLineLength(0);
-		
+
 		ResultSearchObject pointer = null;
 		
-		if(!top5 && region == null) {
+		if(!top5 && country != null) {
 			pieChart.setVisible(false);
+			
 			XYChart.Series<String, Number> paramSeries = new XYChart.Series();
 			paramSeries.setName(results.get(0).getCountry()); 
 	        
@@ -188,12 +192,13 @@ public class ResultController implements Initializable {
 	        parameterChart.getData().add(paramSeries);
 	        rainChart.getData().add(rainSeries);
 	        tempChart.getData().add(tempSeries);
+
 	        
 	        parameterChart.setLegendVisible(false);
 	        rainChart.setLegendVisible(false);
 	        tempChart.setLegendVisible(false);
-		}else {
-			
+		}else{
+
 			setPlotsTop5();
 		}
 

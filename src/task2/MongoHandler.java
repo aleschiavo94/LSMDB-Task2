@@ -318,10 +318,17 @@ public class MongoHandler {
 			while (documents.hasNext()) {
 				JSONObject country_result = new JSONObject();
 				obj = new JSONObject(documents.next().toJson());
+				System.out.println(obj);
 				JSONObject id = obj.getJSONObject("_id");
 				
-				country_result.put("AvgTemperature", obj.get("AvgTemperature"));
-				country_result.put("AvgPrecipitation", obj.get("AvgPrecipitation"));
+				if(obj.get("AvgTemperature").toString().equals("null"))
+					country_result.put("AvgTemperature", 0.0);
+				else
+					country_result.put("AvgTemperature", obj.get("AvgTemperature"));
+				if(obj.get("AvgPrecipitation").toString().equals("null"))
+					country_result.put("AvgPrecipitation", 0.0);
+				else
+					country_result.put("AvgPrecipitation", obj.get("AvgPrecipitation"));
 				country_result.put("TotalProduction", obj.getInt("TotalProduction"));
 				if(id.has("Year"))
 					country_result.put("Year", id.getInt("Year"));
@@ -333,6 +340,7 @@ public class MongoHandler {
 		} finally {
 			documents.close();
 		}	
+		System.out.println(result);
 		return result;
 	}
 	
@@ -410,8 +418,14 @@ public class MongoHandler {
 					country_result.put("AvgProduction", 0.0);
 				else
 					country_result.put("AvgProduction", obj.get("AvgProduction"));
-				country_result.put("AvgTemperature", obj.get("AvgTemperature"));
-				country_result.put("AvgPrecipitation", obj.get("AvgPrecipitation"));
+				if(obj.get("AvgTemperature").toString().equals("null"))
+					country_result.put("AvgTemperature", 0.0);
+				else
+					country_result.put("AvgTemperature", obj.get("AvgTemperature"));
+				if(obj.get("AvgPrecipitation").toString().equals("null"))
+					country_result.put("AvgPrecipitation", 0.0);
+				else
+					country_result.put("AvgPrecipitation", obj.get("AvgPrecipitation"));
 				if(id.has("Year"))
 					country_result.put("Year", id.getInt("Year"));
 				country_result.put("Country", id.getString("Country"));
@@ -472,8 +486,14 @@ public class MongoHandler {
 				JSONObject id = obj.getJSONObject("_id");
 				country.put("Country", id.get("Country"));
 				country.put("TotalProduction", obj.get("TotalProduction"));
-				country.put("AvgPrecipitation", obj.get("AvgPrecipitation"));
-				country.put("AvgTemperature", obj.get("AvgTemperature"));
+				if(obj.get("AvgTemperature").toString().equals("null"))
+					country.put("AvgTemperature", 0.0);
+				else
+					country.put("AvgPrecipitation", obj.get("AvgPrecipitation"));
+				if(obj.get("AvgPrecipitation").toString().equals("null"))
+					country.put("AvgPrecipitation", 0.0);
+				else
+					country.put("AvgTemperature", obj.get("AvgTemperature"));
 
 				totalCountry.put(i, country);
 				if(i == 4) 
@@ -524,10 +544,16 @@ public class MongoHandler {
 					ie = y.getJSONObject("id_ie");
 				
 				if(y.has("temperature_avg"))
-					country_result.put("AvgTemperature", y.get("temperature_avg"));
+					if(y.get("temperature_avg").toString().equals("null"))
+						country_result.put("AvgTemperature", 0.0);
+					else
+						country_result.put("AvgTemperature", y.get("temperature_avg"));
 				
 				if(y.has("rainfall_avg"))
-				country_result.put("AvgPrecipitation", y.get("rainfall_avg"));
+					if(y.get("rainfall_avg").toString().equals("null"))
+						country_result.put("AvgPrecipitation", 0.0);
+					else
+						country_result.put("AvgPrecipitation", y.get("rainfall_avg"));
 				country_result.put("Year", y.getInt("year"));
 				country_result.put("Country", c.getString("country_name"));
 												
@@ -624,10 +650,12 @@ public class MongoHandler {
 				}
 				
 				if(y.has("rainfall_avg"))
-					AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
+					if(!y.get("rainfall_avg").toString().equals("null"))
+						AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
 				
 				if(y.has("temperature_avg"))
-					AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
+					if(!y.get("temperature_avg").toString().equals("null"))
+						AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
 				
 				if(ie != null) {
 					document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
@@ -722,10 +750,12 @@ public class MongoHandler {
 				}
 				
 				if(y.has("rainfall_avg"))
-					AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
+					if(!y.get("rainfall_avg").toString().equals("null"))
+						AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
 				
 				if(y.has("temperature_avg"))
-					AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
+					if(!y.get("temperature_avg").toString().equals("null"))
+						AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
 				
 				if(ie != null) {
 					document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
@@ -790,10 +820,16 @@ public class MongoHandler {
 					ie = y.getJSONObject("id_ie");
 				
 				if(y.has("temperature_avg"))
-					country_result.put("AvgTemperature", y.get("temperature_avg"));
+					if(y.get("temperature_avg").toString().equals("null"))
+						country_result.put("AvgTemperature", 0.0);
+					else
+						country_result.put("AvgTemperature", y.get("temperature_avg"));
 				
 				if(y.has("rainfall_avg"))
-				country_result.put("AvgPrecipitation", y.get("rainfall_avg"));
+					if(y.get("rainfall_avg").toString().equals("null"))
+						country_result.put("AvgPrecipitation", 0.0);
+					else
+						country_result.put("AvgPrecipitation", y.get("rainfall_avg"));
 				country_result.put("Year", y.getInt("year"));
 				country_result.put("Country", c.getString("country_name"));
 												
@@ -891,10 +927,12 @@ public class MongoHandler {
 				}
 				
 				if(y.has("rainfall_avg"))
-					AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
+					if(!y.get("rainfall_avg").toString().equals("null"))
+						AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
 				
 				if(y.has("temperature_avg"))
-					AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
+					if(!y.get("temperature_avg").toString().equals("null"))
+						AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
 				
 				if(ie != null) {
 					document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
@@ -989,10 +1027,12 @@ public class MongoHandler {
 				
 				
 				if(y.has("rainfall_avg"))
-					AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
+					if(!y.get("rainfall_avg").toString().equals("null"))
+						AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
 				
 				if(y.has("temperature_avg"))
-					AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
+					if(!y.get("temperature_avg").toString().equals("null"))
+						AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
 				
 				if(ie != null) {
 					document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
