@@ -318,7 +318,7 @@ public class MongoHandler {
 			while (documents.hasNext()) {
 				JSONObject country_result = new JSONObject();
 				obj = new JSONObject(documents.next().toJson());
-				System.out.println(obj);
+				
 				JSONObject id = obj.getJSONObject("_id");
 				
 				if(obj.get("AvgTemperature").toString().equals("null"))
@@ -340,7 +340,6 @@ public class MongoHandler {
 		} finally {
 			documents.close();
 		}	
-		System.out.println(result);
 		return result;
 	}
 	
@@ -411,7 +410,6 @@ public class MongoHandler {
 			while (documents.hasNext()) {
 				JSONObject country_result = new JSONObject();
 				obj = new JSONObject(documents.next().toJson());
-				System.out.println(obj);
 				JSONObject id = obj.getJSONObject("_id");
 				
 				if(obj.get("AvgProduction").toString().equals("null"))
@@ -504,7 +502,6 @@ public class MongoHandler {
 		} finally {
 			cursor.close();
 		}
-		System.out.println(totalCountry);
 		return totalCountry;
 	}
 	
@@ -722,7 +719,6 @@ public class MongoHandler {
 				country_result = new JSONObject();
 				Document document = null;
 				obj = new JSONObject(cursor.next().toJson());
-
 				JSONObject c = obj.getJSONObject("countries");
 				JSONObject y = c.getJSONObject("years");
 				JSONObject ie = null;
@@ -773,6 +769,7 @@ public class MongoHandler {
 			country_result.put("Import", AvgImport/year_selected);
 			country_result.put("Country", prev_country);
 			
+			result.put(i, country_result);
 		} finally {
 			cursor.close();
 		}

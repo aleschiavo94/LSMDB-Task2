@@ -9,6 +9,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import org.json.JSONArray;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -125,33 +127,127 @@ public class DocumentController implements Initializable {
 			
 			group.getToggles().clear();
 			
-			
+			testSubmit();
 			//opening a new window with a new controller
-			//if(!aggregation.getSelectionModel().getSelectedItem().toString().equals("Top 5")) {
-		        Stage dialogStage = new Stage();
-		        Scene scene;
-		        
-		        String resource = "ResultFXML.fxml";
-		        FXMLLoader loader = new FXMLLoader();
-		        loader.setLocation(getClass().getResource(resource));
-		        
-		        Parent root = (Parent) loader.load();
-		        
-		        ResultController controller = loader.getController();
-		        controller.initResult(food_selected, region_selected, search, radio_selected, start_year, end_year, aggregation_selected);
-		        
-				scene = new Scene(root);
-		        dialogStage.setTitle("Analysis result");
-		        dialogStage.setScene(scene);
-		        dialogStage.show();
-			/*}else {
-				System.out.println("TOP 5 NON IMPLEMENTATA ");
-			}*/
+//	        Stage dialogStage = new Stage();
+//	        Scene scene;
+//	        
+//	        String resource = "ResultFXML.fxml";
+//	        FXMLLoader loader = new FXMLLoader();
+//	        loader.setLocation(getClass().getResource(resource));
+//	        
+//	        Parent root = (Parent) loader.load();
+//	        
+//	        ResultController controller = loader.getController();
+//	        controller.initResult(food_selected, region_selected, search, radio_selected, start_year, end_year, aggregation_selected);
+//	        
+//			scene = new Scene(root);
+//	        dialogStage.setTitle("Analysis result");
+//	        dialogStage.setScene(scene);
+//	        dialogStage.show();
 		}
-        		
-        
-              
-         
+	}
+	
+	private void testSubmit() {
+		JSONArray result = new JSONArray();
+		boolean top5 = false;
+		String parameterLabel = null;
+		String objectiveLabel = null;
+		
+		if(radio_selected.equals("Production")) {
+			if(aggregation_selected.equals("Sum")) {
+				result = MongoHandler.getTotalProduction(food_selected,region_selected,search,start_year,end_year);
+				System.out.println(result);		
+				parameterLabel = "Total Production (tonnes)";
+				objectiveLabel = "Total production Value: ";
+			}
+			else if(aggregation_selected.equals("Average")) {
+				result = MongoHandler.getAverageProduction(food_selected,region_selected,search,start_year,end_year);
+				System.out.println(result);
+				parameterLabel = "AVG Production (tonnes)";
+				objectiveLabel = "Avg Yearly Production: ";
+			}
+			else if(aggregation_selected.equals("Top 5")) {
+				top5 = true;
+				result = MongoHandler.getTop5Production(food_selected,region_selected,start_year,end_year);
+				System.out.println(result);
+				parameterLabel = "Top 5 Production (tonnes)";
+				objectiveLabel = "Total Production Value: ";
+			}
+		}
+		else if(radio_selected.equals("Import")) {
+			if(aggregation_selected.equals("Sum")) {
+				if(region_selected != null && search == null)
+					result = MongoHandler.getTotalRegionImport(food_selected,region_selected,start_year,end_year);
+				else
+					result = MongoHandler.getTotalCountryImport(food_selected,search,start_year,end_year);
+				System.out.println(result);
+				parameterLabel = "Total Import (tonnes)";
+				objectiveLabel = "Total Import Value: ";
+			}
+			else if(aggregation_selected.contentEquals("Average")) {
+				if(region_selected != null && search == null)
+					result = MongoHandler.getAverageRegionImport(food_selected,region_selected,start_year,end_year);
+				else
+					result = MongoHandler.getTotalCountryImport(food_selected,search,start_year,end_year);
+				System.out.println(result);
+				parameterLabel = "AVG Import (tonnes)";
+				objectiveLabel = "Avg Yearly Import: ";
+			}
+		}
+		else if(radio_selected.equals("Export")) {
+			if(aggregation_selected.equals("Sum")) {
+				if(region_selected != null && search == null)
+					result = MongoHandler.getTotalRegionExport(food_selected,region_selected,start_year,end_year);
+				else
+					result = MongoHandler.getTotalCountryExport(food_selected,search,start_year,end_year);
+				System.out.println(result);
+				parameterLabel = "Total Export (tonnes)";
+				objectiveLabel = "Total Export Value: ";
+			}
+			else if(aggregation_selected.contentEquals("Average")) {
+				if(region_selected != null && search == null)
+					result = MongoHandler.getAverageRegionExport(food_selected,region_selected,start_year,end_year);
+				else
+					result = MongoHandler.getTotalCountryExport(food_selected,search,start_year,end_year);
+				System.out.println(result);
+				parameterLabel = "AVG Export (tonnes)";
+				objectiveLabel = "Avg Yearly Export: ";
+			}
+		}
+		
+		if(result.isEmpty() || result.length() == 0 || result == null) {
+			Alert windowAlert = new Alert(AlertType.INFORMATION);
+			windowAlert.setHeaderText(null);
+			windowAlert.setContentText("Your search did not produce any results");
+			windowAlert.setTitle("Attention");
+			windowAlert.showAndWait();
+						
+        	return;
+		}
+		else {
+			Stage dialogStage = new Stage();
+	        Scene scene;
+	        
+	        String resource = "ResultFXML.fxml";
+	        FXMLLoader loader = new FXMLLoader();
+	        loader.setLocation(getClass().getResource(resource));
+	        
+	        Parent root = null;
+			try {
+				root = (Parent) loader.load();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	        
+	        ResultController controller = loader.getController();
+	        controller.initResult(result, search, aggregation_selected, parameterLabel, objectiveLabel); //food_selected, region_selected, search, radio_selected, start_year, end_year, aggregation_selected);
+	        
+			scene = new Scene(root);
+	        dialogStage.setTitle("Analysis result");
+	        dialogStage.setScene(scene);
+	        dialogStage.show();
+		}
 	}
 	
 	public void signup() {

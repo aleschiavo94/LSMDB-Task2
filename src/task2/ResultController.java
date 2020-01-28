@@ -18,20 +18,17 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
+import javafx.scene.control.Alert.AlertType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 
 public class ResultController implements Initializable {
 	
-	private JSONArray TotalProduction = new JSONArray();
-	private JSONArray AvgProduction = new JSONArray();
-	private JSONArray top5Production =new JSONArray();
-	private JSONArray TotalImport = new JSONArray();
-	private JSONArray AvgImport = new JSONArray();
-	private JSONArray TotalExport = new JSONArray();
-	private JSONArray AvgExport = new JSONArray();
+	private JSONArray result = new JSONArray();
 
 	
 	@FXML private BarChart<String, Number>  parameterChart;
@@ -58,79 +55,79 @@ public class ResultController implements Initializable {
 	
 	private List<ResultSearchObject> results;
 	
-	public void initResult(String food, String region, String country, String aim, String start, String end, String aggregation) {
+	public void initResult(JSONArray result, String country, String aggregation, String pLabel, String oLabel) { //String food, String region, String country, String aim, String start, String end, String aggregation) {
 		JSONArray pointer = null;
-		top5 = false;
-		if(aim.equals("Production")) {
-			if(aggregation.equals("Sum")) {
-				TotalProduction = MongoHandler.getTotalProduction(food,region,country,start,end);
-				System.out.println(TotalProduction);
-				pointer = TotalProduction;		
-				parameterLabel.setText("Total Production (tonnes)");
-				objectiveLabel.setText("Total production Value: ");
-			}
-			else if(aggregation.contentEquals("Average")) {
-				AvgProduction = MongoHandler.getAverageProduction(food,region,country,start,end);
-				System.out.println(AvgProduction);
-				pointer = AvgProduction;
-				parameterLabel.setText("AVG Production (tonnes)");
-				objectiveLabel.setText("Avg Yearly Production: ");
-			}
-			else if(aggregation.contentEquals("Top 5")) {
-				top5 = true;
-				top5Production = MongoHandler.getTop5Production(food,region,start,end);
-				System.out.println(top5Production);
-				pointer = top5Production;
-				parameterLabel.setText("Top 5 Production (tonnes)");
-				objectiveLabel.setText("Total Production Value: ");
-			}
-		}
-		else if(aim.equals("Import")) {
-			if(aggregation.equals("Sum")) {
-				if(region != null && country == null)
-					TotalImport = MongoHandler.getTotalRegionImport(food,region,start,end);
-				else
-					TotalImport = MongoHandler.getTotalCountryImport(food,country,start,end);
-				System.out.println(TotalImport);
-				pointer = TotalImport;
-				parameterLabel.setText("Total Import (tonnes)");
-				objectiveLabel.setText("Total Import Value: ");
-			}
-			else if(aggregation.contentEquals("Average")) {
-				if(region != null && country == null)
-					AvgImport = MongoHandler.getAverageRegionImport(food,region,start,end);
-				else
-					AvgImport = MongoHandler.getTotalCountryImport(food,country,start,end);
-				System.out.println(AvgImport);
-				pointer =AvgImport;
-				parameterLabel.setText("AVG Import (tonnes)");
-				objectiveLabel.setText("Avg Yearly Import: ");
-			}
-		}
-		else if(aim.equals("Export")) {
-			if(aggregation.equals("Sum")) {
-				if(region != null && country == null)
-					TotalExport = MongoHandler.getTotalRegionExport(food,region,start,end);
-				else
-					TotalExport = MongoHandler.getTotalCountryExport(food,country,start,end);
-				System.out.println(TotalExport);
-				pointer = TotalExport;
-				parameterLabel.setText("Total Export (tonnes)");
-				objectiveLabel.setText("Total Export Value: ");
-			}
-			else if(aggregation.contentEquals("Average")) {
-				if(region != null && country == null)
-					AvgExport = MongoHandler.getAverageRegionExport(food,region,start,end);
-				else
-					AvgExport = MongoHandler.getTotalCountryExport(food,country,start,end);
-				System.out.println(AvgExport);
-				pointer = AvgExport;
-				parameterLabel.setText("AVG Export (tonnes)");
-				objectiveLabel.setText("Avg Yearly Export: ");
-			}
-		}
+		System.out.println(aggregation);
 		
 		
+//		top5 = false;
+//		if(aim.equals("Production")) {
+//			if(aggregation.equals("Sum")) {
+//				result = MongoHandler.getTotalProduction(food,region,country,start,end);
+//				System.out.println(result);		
+//				parameterLabel.setText("Total Production (tonnes)");
+//				objectiveLabel.setText("Total production Value: ");
+//			}
+//			else if(aggregation.contentEquals("Average")) {
+//				result = MongoHandler.getAverageProduction(food,region,country,start,end);
+//				System.out.println(result);
+//				parameterLabel.setText("AVG Production (tonnes)");
+//				objectiveLabel.setText("Avg Yearly Production: ");
+//			}
+//			else if(aggregation.contentEquals("Top 5")) {
+//				top5 = true;
+//				result = MongoHandler.getTop5Production(food,region,start,end);
+//				System.out.println(result);
+//				parameterLabel.setText("Top 5 Production (tonnes)");
+//				objectiveLabel.setText("Total Production Value: ");
+//			}
+//		}
+//		else if(aim.equals("Import")) {
+//			if(aggregation.equals("Sum")) {
+//				if(region != null && country == null)
+//					result = MongoHandler.getTotalRegionImport(food,region,start,end);
+//				else
+//					result = MongoHandler.getTotalCountryImport(food,country,start,end);
+//				System.out.println(result);
+//				parameterLabel.setText("Total Import (tonnes)");
+//				objectiveLabel.setText("Total Import Value: ");
+//			}
+//			else if(aggregation.contentEquals("Average")) {
+//				if(region != null && country == null)
+//					result = MongoHandler.getAverageRegionImport(food,region,start,end);
+//				else
+//					result = MongoHandler.getTotalCountryImport(food,country,start,end);
+//				System.out.println(result);
+//				parameterLabel.setText("AVG Import (tonnes)");
+//				objectiveLabel.setText("Avg Yearly Import: ");
+//			}
+//		}
+//		else if(aim.equals("Export")) {
+//			if(aggregation.equals("Sum")) {
+//				if(region != null && country == null)
+//					result = MongoHandler.getTotalRegionExport(food,region,start,end);
+//				else
+//					result = MongoHandler.getTotalCountryExport(food,country,start,end);
+//				System.out.println(result);
+//				parameterLabel.setText("Total Export (tonnes)");
+//				objectiveLabel.setText("Total Export Value: ");
+//			}
+//			else if(aggregation.contentEquals("Average")) {
+//				if(region != null && country == null)
+//					result = MongoHandler.getAverageRegionExport(food,region,start,end);
+//				else
+//					result = MongoHandler.getTotalCountryExport(food,country,start,end);
+//				System.out.println(result);
+//				parameterLabel.setText("AVG Export (tonnes)");
+//				objectiveLabel.setText("Avg Yearly Export: ");
+//			}
+//		}
+//		result = new JSONArray();
+		pointer = result;
+		
+
+		parameterLabel.setText(pLabel);
+		objectiveLabel.setText(oLabel);
 		
 		if(pointer != null) {
 			JSONObject json = new JSONObject();
@@ -138,20 +135,23 @@ public class ResultController implements Initializable {
 			for(int i = 0; i < pointer.length(); i++) {
 				json = pointer.getJSONObject(i);
 				results.add(new ResultSearchObject(json));
-				
 			}
 			if(!top5) {
 				Collections.sort(results);
 			}
 				int res = 0;
 				if(aggregation.contentEquals("Average")) {
-					for(int i = 0; i < results.size(); i++)
+					for(int i = 0; i < results.size(); i++) {
 						res += results.get(i).getParameterSought();
+					}
 					res = res / results.size();
 					resultLabel.setText(Integer.toString(res));
-				}else if(aggregation.contentEquals("Sum") || aggregation.contentEquals("Top 5")) {
-					for(int i = 0; i < results.size(); i++)
+				}
+				else if(aggregation.contentEquals("Sum") || aggregation.contentEquals("Top 5")) {
+					for(int i = 0; i < results.size(); i++) {
+						System.out.println(results.get(i).getParameterSought());
 						res += results.get(i).getParameterSought();
+					}
 					resultLabel.setText(Integer.toString(res));
 				}
 			setPlots(country);
@@ -207,8 +207,8 @@ public class ResultController implements Initializable {
 	}
 	
 	public void setPlotsTop5() {
-		objectiveLabel.setVisible(false);
-		resultLabel.setVisible(false);
+//		objectiveLabel.setVisible(false);
+//		resultLabel.setVisible(false);
 		
 		ResultSearchObject pointer = null;
 		ObservableList<PieChart.Data> valueList = FXCollections.observableArrayList();

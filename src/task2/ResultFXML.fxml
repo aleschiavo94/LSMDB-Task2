@@ -9,15 +9,14 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-
-<Pane prefHeight="670.0" prefWidth="1005.0" style="-fx-background-image: url(&quot;salsa.jpg&quot;); -fx-background-size: contain;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="task2.ResultController">
+<Pane prefHeight="800.0" prefWidth="1200.0" style="-fx-background-image: url(&quot;salsa.jpg&quot;); -fx-background-size: contain;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="task2.ResultController">
    <children>
-      <Label layoutX="410.0" prefHeight="43.0" prefWidth="222.0" text="Analysis result" textFill="#f2a501">
+      <Label layoutX="489.0" layoutY="7.0" prefHeight="43.0" prefWidth="222.0" text="Analysis result" textFill="#f2a501">
          <font>
             <Font name="Maiandra GD" size="35.0" />
          </font>
       </Label>
-      <BarChart fx:id="parameterChart" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" layoutX="606.0" layoutY="85.0" prefHeight="254.0" prefWidth="327.0" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
+      <BarChart fx:id="parameterChart" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" layoutX="725.0" layoutY="124.0" prefHeight="301.0" prefWidth="391.0" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
         <xAxis>
           <CategoryAxis fx:id="param_yearX" prefHeight="39.0" prefWidth="270.0" side="BOTTOM" tickLabelFill="#f2a501" tickLabelRotation="90.0">
                <tickLabelFont>
@@ -33,33 +32,33 @@
             </NumberAxis>
         </yAxis>
       </BarChart>
-      <Label layoutX="354.0" layoutY="347.0" prefHeight="43.0" prefWidth="203.0" text="Temperature (C°)" textFill="#f2a501">
+      <Label layoutX="442.0" layoutY="479.0" prefHeight="43.0" prefWidth="203.0" text="Temperature (C°)" textFill="#f2a501">
          <font>
             <Font name="Maiandra GD" size="25.0" />
          </font>
       </Label>
-      <Label layoutX="693.0" layoutY="347.0" prefHeight="43.0" prefWidth="222.0" text="Precipitations (mm)" textFill="#f2a501">
+      <Label layoutX="825.0" layoutY="479.0" prefHeight="43.0" prefWidth="222.0" text="Precipitations (mm)" textFill="#f2a501">
+         <font>
+            <Font size="23.0" />
+         </font>
+      </Label>
+      <Label fx:id="parameterLabel" alignment="CENTER" layoutX="765.0" layoutY="89.0" prefHeight="43.0" prefWidth="342.0" textFill="#f2a501">
+         <font>
+            <Font size="23.0" />
+         </font>
+      </Label>
+      <Label fx:id="objectiveLabel" alignment="CENTER" layoutX="302.0" layoutY="53.0" prefHeight="36.0" prefWidth="298.0" text="_" textFill="#f2a501">
          <font>
             <Font name="Maiandra GD" size="25.0" />
          </font>
       </Label>
-      <Label fx:id="parameterLabel" alignment="CENTER" layoutX="617.0" layoutY="58.0" prefHeight="43.0" prefWidth="342.0" textFill="#f2a501">
+      <Label fx:id="resultLabel" alignment="CENTER" layoutX="600.0" layoutY="53.0" prefHeight="36.0" prefWidth="168.0" text="_" textFill="#f2a501">
          <font>
             <Font name="Maiandra GD" size="25.0" />
          </font>
       </Label>
-      <Label fx:id="objectiveLabel" alignment="CENTER" layoutX="356.0" layoutY="114.0" prefHeight="30.0" prefWidth="255.0" text="_" textFill="#f2a501">
-         <font>
-            <Font name="Maiandra GD" size="25.0" />
-         </font>
-      </Label>
-      <Label fx:id="resultLabel" alignment="CENTER" layoutX="352.0" layoutY="137.0" prefHeight="30.0" prefWidth="262.0" text="_" textAlignment="CENTER" textFill="#f2a501">
-         <font>
-            <Font name="Maiandra GD" size="25.0" />
-         </font>
-      </Label>
-      <PieChart fx:id="pieChart" layoutX="270.0" layoutY="45.0" prefHeight="301.0" prefWidth="371.0" />
-      <LineChart fx:id="tempChart" createSymbols="false" layoutX="295.0" layoutY="387.0" prefHeight="236.0" prefWidth="288.0">
+      <PieChart fx:id="pieChart" layoutX="358.0" layoutY="124.0" prefHeight="301.0" prefWidth="371.0" />
+      <LineChart fx:id="tempChart" createSymbols="false" layoutX="334.0" layoutY="518.0" prefHeight="243.0" prefWidth="391.0">
         <xAxis>
           <CategoryAxis side="BOTTOM" tickLabelFill="#f2a501">
                <tickLabelFont>
@@ -75,7 +74,7 @@
             </NumberAxis>
         </yAxis>
       </LineChart>
-      <LineChart fx:id="rainChart" createSymbols="false" layoutX="645.0" layoutY="387.0" prefHeight="236.0" prefWidth="288.0">
+      <LineChart fx:id="rainChart" createSymbols="false" layoutX="741.0" layoutY="518.0" prefHeight="243.0" prefWidth="391.0">
         <xAxis>
           <CategoryAxis side="BOTTOM" tickLabelFill="#f2a501" tickLabelGap="5.0">
                <tickLabelFont>
