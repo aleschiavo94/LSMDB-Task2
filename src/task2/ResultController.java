@@ -164,7 +164,9 @@ public class ResultController implements Initializable {
 	
 	//Format parameter and insert in Charts
 	public void setPlots(String region) {
-
+		pieChart.setLabelsVisible(false);
+		pieChart.setLabelLineLength(0);
+		
 		ResultSearchObject pointer = null;
 		
 		if(!top5 && region == null) {
@@ -186,6 +188,10 @@ public class ResultController implements Initializable {
 	        parameterChart.getData().add(paramSeries);
 	        rainChart.getData().add(rainSeries);
 	        tempChart.getData().add(tempSeries);
+	        
+	        parameterChart.setLegendVisible(false);
+	        rainChart.setLegendVisible(false);
+	        tempChart.setLegendVisible(false);
 		}else {
 			
 			setPlotsTop5();
@@ -196,6 +202,9 @@ public class ResultController implements Initializable {
 	}
 	
 	public void setPlotsTop5() {
+		objectiveLabel.setVisible(false);
+		resultLabel.setVisible(false);
+		
 		ResultSearchObject pointer = null;
 		ObservableList<PieChart.Data> valueList = FXCollections.observableArrayList();
 		for(int i = 0; i < results.size(); i++) {
@@ -221,6 +230,10 @@ public class ResultController implements Initializable {
 			parameterChart.getData().add(paramSeries);
 	        rainChart.getData().add(rainSeries);
 	        tempChart.getData().add(tempSeries);
+	        
+	        parameterChart.setLegendVisible(false);
+	        rainChart.setLegendVisible(false);
+	        tempChart.setLegendVisible(false);
 		}
 	}
 }

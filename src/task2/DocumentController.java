@@ -116,12 +116,12 @@ public class DocumentController implements Initializable {
 			aggregation_selected = aggregation.getSelectionModel().getSelectedItem().toString();
 					
 			//cleaning the fields
-			food_comboBox.getItems().clear();
-			continent_comboBox.getItems().clear();
+			food_comboBox.getSelectionModel().clearSelection();
+			continent_comboBox.getSelectionModel().clearSelection();
 			start_date.clear();
 			end_date.clear();
 			search_field.clear();
-			aggregation.getItems().clear();
+			aggregation.getSelectionModel().clearSelection();
 			
 			group.getToggles().clear();
 			
