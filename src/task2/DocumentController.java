@@ -241,7 +241,7 @@ public class DocumentController implements Initializable {
 			}
 	        
 	        ResultController controller = loader.getController();
-	        controller.initResult(result, search, aggregation_selected, parameterLabel, objectiveLabel); //food_selected, region_selected, search, radio_selected, start_year, end_year, aggregation_selected);
+	        controller.initResult(result, region_selected, search, radio_selected, aggregation_selected, parameterLabel, objectiveLabel, top5, food_selected, start_year, end_year);
 	        
 			scene = new Scene(root);
 	        dialogStage.setTitle("Analysis result");

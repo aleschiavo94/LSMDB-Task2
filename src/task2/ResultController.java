@@ -32,8 +32,10 @@ public class ResultController implements Initializable {
 
 	
 	@FXML private BarChart<String, Number>  parameterChart;
-	@FXML private LineChart tempChart;
-	@FXML private LineChart rainChart;
+	@FXML private LineChart tempLineChart;
+	@FXML private LineChart rainLineChart;
+	@FXML private BarChart<String, Number> tempBarChart;
+	@FXML private BarChart<String, Number> rainBarChart;
 	
 	@FXML private CategoryAxis param_yearX;
 	@FXML private NumberAxis param_valueY;
@@ -49,110 +51,49 @@ public class ResultController implements Initializable {
 	
 	@FXML private Label objectiveLabel;
 	@FXML private Label resultLabel;
+	@FXML private Label title;
 	
 	@FXML private PieChart pieChart;
 	private boolean top5;
 	
 	private List<ResultSearchObject> results;
 	
-	public void initResult(JSONArray result, String country, String aggregation, String pLabel, String oLabel) { //String food, String region, String country, String aim, String start, String end, String aggregation) {
-		JSONArray pointer = null;
-		System.out.println(aggregation);
-		
-		
-//		top5 = false;
-//		if(aim.equals("Production")) {
-//			if(aggregation.equals("Sum")) {
-//				result = MongoHandler.getTotalProduction(food,region,country,start,end);
-//				System.out.println(result);		
-//				parameterLabel.setText("Total Production (tonnes)");
-//				objectiveLabel.setText("Total production Value: ");
-//			}
-//			else if(aggregation.contentEquals("Average")) {
-//				result = MongoHandler.getAverageProduction(food,region,country,start,end);
-//				System.out.println(result);
-//				parameterLabel.setText("AVG Production (tonnes)");
-//				objectiveLabel.setText("Avg Yearly Production: ");
-//			}
-//			else if(aggregation.contentEquals("Top 5")) {
-//				top5 = true;
-//				result = MongoHandler.getTop5Production(food,region,start,end);
-//				System.out.println(result);
-//				parameterLabel.setText("Top 5 Production (tonnes)");
-//				objectiveLabel.setText("Total Production Value: ");
-//			}
-//		}
-//		else if(aim.equals("Import")) {
-//			if(aggregation.equals("Sum")) {
-//				if(region != null && country == null)
-//					result = MongoHandler.getTotalRegionImport(food,region,start,end);
-//				else
-//					result = MongoHandler.getTotalCountryImport(food,country,start,end);
-//				System.out.println(result);
-//				parameterLabel.setText("Total Import (tonnes)");
-//				objectiveLabel.setText("Total Import Value: ");
-//			}
-//			else if(aggregation.contentEquals("Average")) {
-//				if(region != null && country == null)
-//					result = MongoHandler.getAverageRegionImport(food,region,start,end);
-//				else
-//					result = MongoHandler.getTotalCountryImport(food,country,start,end);
-//				System.out.println(result);
-//				parameterLabel.setText("AVG Import (tonnes)");
-//				objectiveLabel.setText("Avg Yearly Import: ");
-//			}
-//		}
-//		else if(aim.equals("Export")) {
-//			if(aggregation.equals("Sum")) {
-//				if(region != null && country == null)
-//					result = MongoHandler.getTotalRegionExport(food,region,start,end);
-//				else
-//					result = MongoHandler.getTotalCountryExport(food,country,start,end);
-//				System.out.println(result);
-//				parameterLabel.setText("Total Export (tonnes)");
-//				objectiveLabel.setText("Total Export Value: ");
-//			}
-//			else if(aggregation.contentEquals("Average")) {
-//				if(region != null && country == null)
-//					result = MongoHandler.getAverageRegionExport(food,region,start,end);
-//				else
-//					result = MongoHandler.getTotalCountryExport(food,country,start,end);
-//				System.out.println(result);
-//				parameterLabel.setText("AVG Export (tonnes)");
-//				objectiveLabel.setText("Avg Yearly Export: ");
-//			}
-//		}
-//		result = new JSONArray();
+	public void initResult(JSONArray result, String region, String country, String aim, String aggregation, String pLabel, String oLabel, boolean top5, String food, String start, String end) {
+		JSONArray pointer = null;		
+		this.top5 = top5;
+		if(region == null || (region != null && country != null))
+			this.title.setText(food + " " + aim + " in " + country + " from " + start + " to " + end);
+		else
+			this.title.setText(food + " " + aim + " in " + region + " from " + start + " to " + end);
+
 		pointer = result;
 		
-
-		parameterLabel.setText(pLabel);
-		objectiveLabel.setText(oLabel);
+		this.parameterLabel.setText(pLabel);
+		this.objectiveLabel.setText(oLabel);
 		
 		if(pointer != null) {
 			JSONObject json = new JSONObject();
-			results = new ArrayList<>();
+			this.results = new ArrayList<>();
 			for(int i = 0; i < pointer.length(); i++) {
 				json = pointer.getJSONObject(i);
-				results.add(new ResultSearchObject(json));
+				this.results.add(new ResultSearchObject(json));
 			}
 			if(!top5) {
-				Collections.sort(results);
+				Collections.sort(this.results);
 			}
 				int res = 0;
 				if(aggregation.contentEquals("Average")) {
-					for(int i = 0; i < results.size(); i++) {
-						res += results.get(i).getParameterSought();
+					for(int i = 0; i < this.results.size(); i++) {
+						res += this.results.get(i).getParameterSought();
 					}
 					res = res / results.size();
-					resultLabel.setText(Integer.toString(res));
+					this.resultLabel.setText(Integer.toString(res));
 				}
 				else if(aggregation.contentEquals("Sum") || aggregation.contentEquals("Top 5")) {
-					for(int i = 0; i < results.size(); i++) {
-						System.out.println(results.get(i).getParameterSought());
-						res += results.get(i).getParameterSought();
+					for(int i = 0; i < this.results.size(); i++) {
+						res += this.results.get(i).getParameterSought();
 					}
-					resultLabel.setText(Integer.toString(res));
+					this.resultLabel.setText(Integer.toString(res) + " tonnes");
 				}
 			setPlots(country);
 		}
@@ -167,36 +108,38 @@ public class ResultController implements Initializable {
 	
 	//Format parameter and insert in Charts
 	public void setPlots(String country) {
-		pieChart.setLabelsVisible(false);
-		pieChart.setLabelLineLength(0);
+//		this.pieChart.setLabelsVisible(false);
+//		this.pieChart.setLabelLineLength(0);
 
 		ResultSearchObject pointer = null;
 		
-		if(!top5 && country != null) {
-			pieChart.setVisible(false);
+		if(!this.top5 && country != null) {
+			this.pieChart.setVisible(false);
+			this.rainBarChart.setVisible(false);
+			this.tempBarChart.setVisible(false);
 			
 			XYChart.Series<String, Number> paramSeries = new XYChart.Series();
-			paramSeries.setName(results.get(0).getCountry()); 
+			paramSeries.setName(this.results.get(0).getCountry()); 
 	        
 			XYChart.Series<String, Number> tempSeries = new XYChart.Series();
-			tempSeries.setName(results.get(0).getCountry()); 
+			tempSeries.setName(this.results.get(0).getCountry()); 
 	        
 			XYChart.Series<String, Number> rainSeries = new XYChart.Series();
-			rainSeries.setName(results.get(0).getCountry()); 
-			for(int i = 0; i < results.size(); i++) {
-				pointer = results.get(i);
+			rainSeries.setName(this.results.get(0).getCountry()); 
+			for(int i = 0; i < this.results.size(); i++) {
+				pointer = this.results.get(i);
 				paramSeries.getData().add(new XYChart.Data(Integer.toString(pointer.getYear()), pointer.getParameterSought()));
 				tempSeries.getData().add(new XYChart.Data(Integer.toString(pointer.getYear()), pointer.getAvgTemp()));
 				rainSeries.getData().add(new XYChart.Data(Integer.toString(pointer.getYear()), pointer.getAvgRain()));
 			}
-	        parameterChart.getData().add(paramSeries);
-	        rainChart.getData().add(rainSeries);
-	        tempChart.getData().add(tempSeries);
+			this.parameterChart.getData().add(paramSeries);
+			this.rainLineChart.getData().add(rainSeries);
+			this.tempLineChart.getData().add(tempSeries);
 
 	        
-	        parameterChart.setLegendVisible(false);
-	        rainChart.setLegendVisible(false);
-	        tempChart.setLegendVisible(false);
+			this.parameterChart.setLegendVisible(false);
+			this.rainLineChart.setLegendVisible(false);
+			this.tempLineChart.setLegendVisible(false);
 		}else{
 
 			setPlotsTop5();
@@ -209,18 +152,20 @@ public class ResultController implements Initializable {
 	public void setPlotsTop5() {
 //		objectiveLabel.setVisible(false);
 //		resultLabel.setVisible(false);
+		this.rainLineChart.setVisible(false);
+		this.tempLineChart.setVisible(false);
 		
 		ResultSearchObject pointer = null;
 		ObservableList<PieChart.Data> valueList = FXCollections.observableArrayList();
-		for(int i = 0; i < results.size(); i++) {
-			pointer = results.get(i);
+		for(int i = 0; i < this.results.size(); i++) {
+			pointer = this.results.get(i);
 			valueList.add(new PieChart.Data(pointer.getCountry(), pointer.getParameterSought()));
 		}
-		pieChart.setData(valueList);
+		this.pieChart.setData(valueList);
 		
 		pointer = null;
-		for(int i = 0 ; i < results.size(); i++) {
-			pointer = results.get(i);
+		for(int i = 0 ; i < this.results.size(); i++) {
+			pointer = this.results.get(i);
 			XYChart.Series<String, Number> paramSeries = new XYChart.Series();
 			paramSeries.setName(pointer.getCountry()); 
 			XYChart.Series<String, Number> tempSeries = new XYChart.Series();
@@ -232,13 +177,13 @@ public class ResultController implements Initializable {
 			tempSeries.getData().add(new XYChart.Data(pointer.getCountry(), pointer.getAvgTemp()));
 			rainSeries.getData().add(new XYChart.Data(pointer.getCountry(), pointer.getAvgRain()));
 			
-			parameterChart.getData().add(paramSeries);
-	        rainChart.getData().add(rainSeries);
-	        tempChart.getData().add(tempSeries);
+			this.parameterChart.getData().add(paramSeries);
+			this.rainBarChart.getData().add(rainSeries);
+			this.tempBarChart.getData().add(tempSeries);
 	        
-	        parameterChart.setLegendVisible(false);
-	        rainChart.setLegendVisible(false);
-	        tempChart.setLegendVisible(false);
+			this.parameterChart.setLegendVisible(false);
+			this.rainBarChart.setLegendVisible(false);
+			this.tempBarChart.setLegendVisible(false);
 		}
 	}
 }
