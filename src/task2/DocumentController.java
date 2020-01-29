@@ -90,17 +90,6 @@ public class DocumentController implements Initializable {
 			search_field.clear();
         	return;
 		}
-		else if((((Labeled) group.getSelectedToggle()).getText().equals("Import") || ((Labeled) group.getSelectedToggle()).getText().equals("Export"))
-				&& aggregation.getSelectionModel().getSelectedItem().toString().equals("Top 5")) {
-			Alert windowAlert = new Alert(AlertType.INFORMATION);
-			windowAlert.setHeaderText(null);
-			windowAlert.setContentText("Top 5 aggregation is possible only with Production");
-			windowAlert.setTitle("Warning");
-			windowAlert.showAndWait();
-			
-			search_field.clear();
-        	return;
-		}
 		else {
 			food_selected = food_comboBox.getSelectionModel().getSelectedItem().toString();
 			if(continent_comboBox.getSelectionModel().isEmpty()) 
@@ -128,23 +117,6 @@ public class DocumentController implements Initializable {
 			group.getToggles().clear();
 			
 			testSubmit();
-			//opening a new window with a new controller
-//	        Stage dialogStage = new Stage();
-//	        Scene scene;
-//	        
-//	        String resource = "ResultFXML.fxml";
-//	        FXMLLoader loader = new FXMLLoader();
-//	        loader.setLocation(getClass().getResource(resource));
-//	        
-//	        Parent root = (Parent) loader.load();
-//	        
-//	        ResultController controller = loader.getController();
-//	        controller.initResult(food_selected, region_selected, search, radio_selected, start_year, end_year, aggregation_selected);
-//	        
-//			scene = new Scene(root);
-//	        dialogStage.setTitle("Analysis result");
-//	        dialogStage.setScene(scene);
-//	        dialogStage.show();
 		}
 	}
 	
@@ -178,7 +150,7 @@ public class DocumentController implements Initializable {
 		else if(radio_selected.equals("Import")) {
 			if(aggregation_selected.equals("Sum")) {
 				if(region_selected != null && search == null)
-					result = MongoHandler.getTotalRegionImport(food_selected,region_selected,start_year,end_year);
+					result = MongoHandler.getTotalRegionImport(food_selected,region_selected,start_year,end_year,false);
 				else
 					result = MongoHandler.getTotalCountryImport(food_selected,search,start_year,end_year);
 				System.out.println(result);
@@ -194,11 +166,16 @@ public class DocumentController implements Initializable {
 				parameterLabel = "AVG Import (tonnes)";
 				objectiveLabel = "Avg Yearly Import: ";
 			}
+			else if(aggregation_selected.contentEquals("Top 5")) {
+				result = MongoHandler.getTotalRegionExport(food_selected,region_selected,start_year,end_year,true);
+				parameterLabel = "Top 5 Import (tonnes)";
+				objectiveLabel = "Total Import Value: ";
+			}
 		}
 		else if(radio_selected.equals("Export")) {
 			if(aggregation_selected.equals("Sum")) {
 				if(region_selected != null && search == null)
-					result = MongoHandler.getTotalRegionExport(food_selected,region_selected,start_year,end_year);
+					result = MongoHandler.getTotalRegionExport(food_selected,region_selected,start_year,end_year,false);
 				else
 					result = MongoHandler.getTotalCountryExport(food_selected,search,start_year,end_year);
 				System.out.println(result);
@@ -213,6 +190,11 @@ public class DocumentController implements Initializable {
 				System.out.println(result);
 				parameterLabel = "AVG Export (tonnes)";
 				objectiveLabel = "Avg Yearly Export: ";
+			}
+			else if(aggregation_selected.contentEquals("Top 5")) {
+				result = MongoHandler.getTotalRegionExport(food_selected,region_selected,start_year,end_year,true);
+				parameterLabel = "Top 5 Export (tonnes)";
+				objectiveLabel = "Total Export Value: ";
 			}
 		}
 		

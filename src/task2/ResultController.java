@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.BubbleChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -54,18 +55,20 @@ public class ResultController implements Initializable {
 	@FXML private Label title;
 	
 	@FXML private PieChart pieChart;
+	@FXML private Label pieChartLabel;
 	private boolean top5;
 	
 	private List<ResultSearchObject> results;
 	
 	public void initResult(JSONArray result, String region, String country, String aim, String aggregation, String pLabel, String oLabel, boolean top5, String food, String start, String end) {
-		JSONArray pointer = null;		
+		JSONArray pointer = null;
 		this.top5 = top5;
-		if(region == null || (region != null && country != null))
-			this.title.setText(food + " " + aim + " in " + country + " from " + start + " to " + end);
+		
+		if(region == null || country != null)
+			this.title.setText(food +" " + aim + " in " + country + " from "+ start + " to " + end);
 		else
-			this.title.setText(food + " " + aim + " in " + region + " from " + start + " to " + end);
-
+			this.title.setText(food +" " + aim + " in " + region + " from " + start + " to " + end);
+		
 		pointer = result;
 		
 		this.parameterLabel.setText(pLabel);
@@ -86,14 +89,15 @@ public class ResultController implements Initializable {
 					for(int i = 0; i < this.results.size(); i++) {
 						res += this.results.get(i).getParameterSought();
 					}
-					res = res / results.size();
-					this.resultLabel.setText(Integer.toString(res));
+					res = res / this.results.size();
+					this.resultLabel.setText(Integer.toString(res)+" tonnes");
 				}
 				else if(aggregation.contentEquals("Sum") || aggregation.contentEquals("Top 5")) {
-					for(int i = 0; i < this.results.size(); i++) {
+					for(int i = 0; i < results.size(); i++) {
+						System.out.println(this.results.get(i).getParameterSought());
 						res += this.results.get(i).getParameterSought();
 					}
-					this.resultLabel.setText(Integer.toString(res) + " tonnes");
+					this.resultLabel.setText(Integer.toString(res)+" tonnes");
 				}
 			setPlots(country);
 		}
@@ -113,7 +117,7 @@ public class ResultController implements Initializable {
 
 		ResultSearchObject pointer = null;
 		
-		if(!this.top5 && country != null) {
+		if(!top5 && country != null) {
 			this.pieChart.setVisible(false);
 			this.rainBarChart.setVisible(false);
 			this.tempBarChart.setVisible(false);

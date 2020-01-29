@@ -6,6 +6,8 @@ import java.nio.file.DirectoryStream.Filter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.FileWriter;
 
@@ -580,7 +583,7 @@ public class MongoHandler {
 		return result;
 	}
 	
-	public static JSONArray getTotalRegionImport(String food, String region, String start, String end) {
+	public static JSONArray getTotalRegionImport(String food, String region, String start, String end, boolean top5) {
 		collection = db.getCollection("dataModelArrAvg");
 		ie_collection = db.getCollection("impExpInfo");
 		Double TotalImport = 0.0;
@@ -674,6 +677,37 @@ public class MongoHandler {
 			result.put(i, country_result);
 		} finally {
 			cursor.close();
+		}
+		
+		JSONArray sortedJsonArray = new JSONArray();
+		if(top5) {    
+
+		    List<JSONObject> jsonValues = new ArrayList<JSONObject>();
+		    for (int j = 0; j < result.length(); j++) {
+		        jsonValues.add(result.getJSONObject(j));
+		    }
+		    Collections.sort(jsonValues, new Comparator<JSONObject>() {
+		        @Override
+		        public int compare(JSONObject a, JSONObject b) {
+		        	int compare = 0;
+		            int valA = a.getInt("Import");
+		            int valB = b.getInt("Import");
+	                compare = Integer.compare(valB, valA);
+		            return compare;
+		        }
+		    });
+
+
+		    int length = 5;
+		    if(result.length() < 5) {
+		    	length = result.length();
+		    }
+		    
+		    for (int j = 0; j < length; j++) {
+		        sortedJsonArray.put(j, jsonValues.get(j));
+		    }
+		    
+		    result = sortedJsonArray;
 		}
 		
 		return result;
@@ -856,7 +890,7 @@ public class MongoHandler {
 		return result;
 	}
 	
-	public static JSONArray getTotalRegionExport(String food, String region, String start, String end) {
+	public static JSONArray getTotalRegionExport(String food, String region, String start, String end, boolean top5) {
 		collection = db.getCollection("dataModelArrAvg");
 		ie_collection = db.getCollection("impExpInfo");
 		Double TotalExport = 0.0;
@@ -896,7 +930,6 @@ public class MongoHandler {
 				country_result = new JSONObject();
 				Document document = null;
 				obj = new JSONObject(cursor.next().toJson());
-
 				JSONObject c = obj.getJSONObject("countries");
 				JSONObject y = c.getJSONObject("years");
 				JSONObject ie = null;
@@ -952,6 +985,38 @@ public class MongoHandler {
 		} finally {
 			cursor.close();
 		}
+		
+		//for calculate the top5
+		JSONArray sortedJsonArray = new JSONArray();
+		if(top5) {    
+
+		    List<JSONObject> jsonValues = new ArrayList<JSONObject>();
+		    for (int j = 0; j < result.length(); j++) {
+		        jsonValues.add(result.getJSONObject(j));
+		    }
+		    Collections.sort(jsonValues, new Comparator<JSONObject>() {
+		        @Override
+		        public int compare(JSONObject a, JSONObject b) {
+		        	int compare = 0;
+		            int valA = a.getInt("Export");
+		            int valB = b.getInt("Export");
+	                compare = Integer.compare(valB, valA);
+		            return compare;
+		        }
+		    });
+		    
+		    int length = 5;
+		    if(result.length() < 5) {
+		    	length = result.length();
+		    }
+		    
+		    for (int j = 0; j < length; j++) {
+		        sortedJsonArray.put(j, jsonValues.get(j));
+		    }
+		    
+		    result = sortedJsonArray;
+		}
+		
 		return result;
 	}
 	
