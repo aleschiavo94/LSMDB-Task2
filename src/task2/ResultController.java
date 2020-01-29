@@ -51,6 +51,7 @@ public class ResultController implements Initializable {
 	@FXML private Label resultLabel;
 	
 	@FXML private PieChart pieChart;
+	@FXML private Label pieChartLabel;
 	private boolean top5;
 	
 	private List<ResultSearchObject> results;
@@ -145,14 +146,14 @@ public class ResultController implements Initializable {
 						res += results.get(i).getParameterSought();
 					}
 					res = res / results.size();
-					resultLabel.setText(Integer.toString(res));
+					resultLabel.setText(Integer.toString(res)+" tonnes");
 				}
 				else if(aggregation.contentEquals("Sum") || aggregation.contentEquals("Top 5")) {
 					for(int i = 0; i < results.size(); i++) {
 						System.out.println(results.get(i).getParameterSought());
 						res += results.get(i).getParameterSought();
 					}
-					resultLabel.setText(Integer.toString(res));
+					resultLabel.setText(Integer.toString(res)+" tonnes");
 				}
 			setPlots(country);
 		}
@@ -174,6 +175,7 @@ public class ResultController implements Initializable {
 		
 		if(!top5 && country != null) {
 			pieChart.setVisible(false);
+			pieChartLabel.setVisible(false);
 			
 			XYChart.Series<String, Number> paramSeries = new XYChart.Series();
 			paramSeries.setName(results.get(0).getCountry()); 
