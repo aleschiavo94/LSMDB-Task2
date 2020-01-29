@@ -102,7 +102,7 @@
             <Font name="Maiandra GD" size="19.0" />
          </font>
       </Label>
-      <Button layoutX="221.0" layoutY="465.0" mnemonicParsing="false" onAction="#fileChooser" style="-fx-background-color: #6B8E23;" text="File chooser" textFill="WHITE">
+      <Button layoutX="221.0" layoutY="465.0" mnemonicParsing="false" onAction="#fileChooserAlert" style="-fx-background-color: #6B8E23;" text="File chooser" textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>

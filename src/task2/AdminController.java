@@ -143,6 +143,33 @@ public class AdminController implements Initializable{
 		}
 	}
 	
+	public void fileChooserAlert() {
+		Alert windowAlert = new Alert(AlertType.CONFIRMATION);
+		windowAlert.setHeaderText("The file to import must be a CVS");
+		windowAlert.setContentText("The fields must be in the following order:\n"
+				+ "1) name,\n"
+				+ "2) country_name,\n"
+				+ "3) year,\n"
+				+ "4) rain,\n"
+				+ "5) production,\n"
+				+ "6) temperature_avg,\n"
+				+ "7) temperature,\n"
+				+ "8) rainfall_avg,\n"
+				+ "9) import_qty,\n"
+				+ "10) import_value,\n" 
+				+ "11) export_qty,\n"
+				+ "12) export_value ");
+		
+		windowAlert.setTitle("Attention");
+    	
+		Optional<ButtonType> result = windowAlert.showAndWait();
+		if (result.get() == ButtonType.OK){
+			fileChooser();
+		} else {
+		    return;
+		}
+	}	
+	
 	@Override
 	 public void initialize(URL url, ResourceBundle rb) {
 			observable_user_list=FXCollections.observableArrayList(MongoHandler.getAllUsers());

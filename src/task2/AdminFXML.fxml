@@ -41,7 +41,7 @@
             <Font name="Malgun Gothic Bold" size="19.0" />
          </font>
       </Label>
-      <Button layoutX="507.0" layoutY="324.0" mnemonicParsing="false" onAction="#fileChooser" style="-fx-background-color: #6B8E23;" text="Upload" textFill="WHITE">
+      <Button layoutX="507.0" layoutY="324.0" mnemonicParsing="false" onAction="#fileChooserAlert" style="-fx-background-color: #6B8E23;" text="Upload" textFill="WHITE">
          <font>
             <Font size="16.0" />
          </font>
