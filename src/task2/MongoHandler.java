@@ -323,22 +323,24 @@ public class MongoHandler {
 				obj = new JSONObject(documents.next().toJson());
 				
 				JSONObject id = obj.getJSONObject("_id");
-				
-				if(obj.get("AvgTemperature").toString().equals("null"))
-					country_result.put("AvgTemperature", 0.0);
-				else
-					country_result.put("AvgTemperature", obj.get("AvgTemperature"));
-				if(obj.get("AvgPrecipitation").toString().equals("null"))
-					country_result.put("AvgPrecipitation", 0.0);
-				else
-					country_result.put("AvgPrecipitation", obj.get("AvgPrecipitation"));
-				country_result.put("TotalProduction", obj.getInt("TotalProduction"));
-				if(id.has("Year"))
-					country_result.put("Year", id.getInt("Year"));
-				country_result.put("Country", id.getString("Country"));
-				
-				result.put(i, country_result);
-				i++;
+				if(obj.getInt("TotalProduction") != 0) {
+					country_result.put("TotalProduction", obj.getInt("TotalProduction"));
+					if(obj.get("AvgTemperature").toString().equals("null"))
+						country_result.put("AvgTemperature", 0.0);
+					else
+						country_result.put("AvgTemperature", obj.get("AvgTemperature"));
+					if(obj.get("AvgPrecipitation").toString().equals("null"))
+						country_result.put("AvgPrecipitation", 0.0);
+					else
+						country_result.put("AvgPrecipitation", obj.get("AvgPrecipitation"));
+					
+					if(id.has("Year"))
+						country_result.put("Year", id.getInt("Year"));
+					country_result.put("Country", id.getString("Country"));
+					
+					result.put(i, country_result);
+					i++;
+				}
 			}
 		} finally {
 			documents.close();
@@ -415,24 +417,23 @@ public class MongoHandler {
 				obj = new JSONObject(documents.next().toJson());
 				JSONObject id = obj.getJSONObject("_id");
 				
-				if(obj.get("AvgProduction").toString().equals("null"))
-					country_result.put("AvgProduction", 0.0);
-				else
+				if(!obj.get("AvgProduction").toString().equals("null") || obj.getDouble("AvgProduction") != 0.0) {
 					country_result.put("AvgProduction", obj.get("AvgProduction"));
-				if(obj.get("AvgTemperature").toString().equals("null"))
-					country_result.put("AvgTemperature", 0.0);
-				else
-					country_result.put("AvgTemperature", obj.get("AvgTemperature"));
-				if(obj.get("AvgPrecipitation").toString().equals("null"))
-					country_result.put("AvgPrecipitation", 0.0);
-				else
-					country_result.put("AvgPrecipitation", obj.get("AvgPrecipitation"));
-				if(id.has("Year"))
-					country_result.put("Year", id.getInt("Year"));
-				country_result.put("Country", id.getString("Country"));
-				
-				result.put(i, country_result);
-				i++;
+					if(obj.get("AvgTemperature").toString().equals("null"))
+						country_result.put("AvgTemperature", 0.0);
+					else
+						country_result.put("AvgTemperature", obj.get("AvgTemperature"));
+					if(obj.get("AvgPrecipitation").toString().equals("null"))
+						country_result.put("AvgPrecipitation", 0.0);
+					else
+						country_result.put("AvgPrecipitation", obj.get("AvgPrecipitation"));
+					if(id.has("Year"))
+						country_result.put("Year", id.getInt("Year"));
+					country_result.put("Country", id.getString("Country"));
+					
+					result.put(i, country_result);
+					i++;
+				}
 			}
 		} finally {
 			documents.close();
@@ -485,22 +486,25 @@ public class MongoHandler {
 				obj = new JSONObject(cursor.next().toJson());
 				
 				JSONObject id = obj.getJSONObject("_id");
-				country.put("Country", id.get("Country"));
-				country.put("TotalProduction", obj.get("TotalProduction"));
-				if(obj.get("AvgTemperature").toString().equals("null"))
-					country.put("AvgTemperature", 0.0);
-				else
-					country.put("AvgPrecipitation", obj.get("AvgPrecipitation"));
-				if(obj.get("AvgPrecipitation").toString().equals("null"))
-					country.put("AvgPrecipitation", 0.0);
-				else
-					country.put("AvgTemperature", obj.get("AvgTemperature"));
-
-				totalCountry.put(i, country);
-				if(i == 4) 
-					break;
-				else
-					i++;
+				
+				if(obj.getInt("TotalProduction") != 0) {
+					country.put("Country", id.get("Country"));
+					country.put("TotalProduction", obj.get("TotalProduction"));
+					if(obj.get("AvgTemperature").toString().equals("null"))
+						country.put("AvgTemperature", 0.0);
+					else
+						country.put("AvgPrecipitation", obj.get("AvgPrecipitation"));
+					if(obj.get("AvgPrecipitation").toString().equals("null"))
+						country.put("AvgPrecipitation", 0.0);
+					else
+						country.put("AvgTemperature", obj.get("AvgTemperature"));
+	
+					totalCountry.put(i, country);
+					if(i == 4) 
+						break;
+					else
+						i++;
+				}
 			}
 		} finally {
 			cursor.close();
@@ -540,41 +544,33 @@ public class MongoHandler {
 				JSONObject c = obj.getJSONObject("countries");
 				JSONObject y = c.getJSONObject("years");
 				JSONObject ie = null;
-				if(y.has("id_ie"))
+				if(y.has("id_ie")) {
 					ie = y.getJSONObject("id_ie");
-				
-				if(y.has("temperature_avg"))
-					if(y.get("temperature_avg").toString().equals("null"))
-						country_result.put("AvgTemperature", 0.0);
-					else
-						country_result.put("AvgTemperature", y.get("temperature_avg"));
-				
-				if(y.has("rainfall_avg"))
-					if(y.get("rainfall_avg").toString().equals("null"))
-						country_result.put("AvgPrecipitation", 0.0);
-					else
-						country_result.put("AvgPrecipitation", y.get("rainfall_avg"));
-				country_result.put("Year", y.getInt("year"));
-				country_result.put("Country", c.getString("country_name"));
-												
-				Document document = null;
-				if(ie != null) {
-					document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
-					if (document == null) {
-					    //Document does not exist
-					} else {
+					
+					Document document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
+					if (document != null) {
 						JSONObject d = new JSONObject(document.toJson());
-						if(d.has("import_qty"))
+						if(d.has("import_qty") && d.getInt("import_qty") != 0) {
 							country_result.put("Import", d.get("import_qty"));
-						else
-							country_result.put("Import", 0);
-					}
+							if(y.has("temperature_avg"))
+								if(y.get("temperature_avg").toString().equals("null"))
+									country_result.put("AvgTemperature", 0.0);
+								else
+									country_result.put("AvgTemperature", y.get("temperature_avg"));
+							
+							if(y.has("rainfall_avg"))
+								if(y.get("rainfall_avg").toString().equals("null"))
+									country_result.put("AvgPrecipitation", 0.0);
+								else
+									country_result.put("AvgPrecipitation", y.get("rainfall_avg"));
+							country_result.put("Year", y.getInt("year"));
+							country_result.put("Country", c.getString("country_name"));	
+							
+							result.put(i, country_result);
+							i++;
+						}
+					}	
 				}
-				else
-					country_result.put("Import", 0);
-				
-				result.put(i, country_result);
-				i++;
 			}
 		} finally {
 			cursor.close();
@@ -626,55 +622,57 @@ public class MongoHandler {
 				JSONObject c = obj.getJSONObject("countries");
 				JSONObject y = c.getJSONObject("years");
 				JSONObject ie = null;
-				if(y.has("id_ie"))
+				if(y.has("id_ie")) {
 					ie = y.getJSONObject("id_ie");
-				
-				if(prev == 0) {
-					prev_country = c.getString("country_name");
-					prev = 1;
-				}
-				
-				if(!prev_country.equals(c.getString("country_name"))) {
-					country_result.put("AvgTemperature", AvgTemperature/year_selected);
-					country_result.put("AvgPrecipitation", AvgPrecipitation/year_selected);
-					country_result.put("Import", TotalImport);
-					country_result.put("Country", prev_country);
 					
-					result.put(i, country_result);
-					i++;
-					AvgTemperature = 0.0;
-					AvgPrecipitation = 0.0;
-					TotalImport = 0.0;
+					if(prev == 0) {
+						prev_country = c.getString("country_name");
+						prev = 1;
+					}
+					
+					if(!prev_country.equals(c.getString("country_name"))) {
+						if(TotalImport != 0.0) {
+							country_result.put("AvgTemperature", AvgTemperature/year_selected);
+							country_result.put("AvgPrecipitation", AvgPrecipitation/year_selected);
+							country_result.put("Import", TotalImport);
+							country_result.put("Country", prev_country);
+							
+							result.put(i, country_result);
+							i++;
+						}
+						AvgTemperature = 0.0;
+						AvgPrecipitation = 0.0;
+						TotalImport = 0.0;
 
-					prev_country = c.getString("country_name");
-				}
-				
-				if(y.has("rainfall_avg"))
-					if(!y.get("rainfall_avg").toString().equals("null"))
-						AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
-				
-				if(y.has("temperature_avg"))
-					if(!y.get("temperature_avg").toString().equals("null"))
-						AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
-				
-				if(ie != null) {
+						prev_country = c.getString("country_name");
+					}
+					
+					if(y.has("rainfall_avg"))
+						if(!y.get("rainfall_avg").toString().equals("null"))
+							AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
+					
+					if(y.has("temperature_avg"))
+						if(!y.get("temperature_avg").toString().equals("null"))
+							AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
+					
 					document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
-					if (document == null) {
-					    //Document does not exist
-					} else {
+					if (document != null) {
 						JSONObject d = new JSONObject(document.toJson());
 						
-						if(d.has("import_qty"))
+						if(d.has("import_qty") && d.getInt("import_qty") != 0)
 							TotalImport += Double.parseDouble(d.get("import_qty").toString());
 					}
 				}
 			}
-			country_result.put("AvgTemperature", AvgTemperature/year_selected);
-			country_result.put("AvgPrecipitation", AvgPrecipitation/year_selected);
-			country_result.put("Import", TotalImport);
-			country_result.put("Country", prev_country);
+			if(TotalImport != 0.0) {
+				country_result.put("AvgTemperature", AvgTemperature/year_selected);
+				country_result.put("AvgPrecipitation", AvgPrecipitation/year_selected);
+				country_result.put("Import", TotalImport);
+				country_result.put("Country", prev_country);
+				
+				result.put(i, country_result);
+			}
 			
-			result.put(i, country_result);
 		} finally {
 			cursor.close();
 		}
@@ -756,54 +754,56 @@ public class MongoHandler {
 				JSONObject c = obj.getJSONObject("countries");
 				JSONObject y = c.getJSONObject("years");
 				JSONObject ie = null;
-				if(y.has("id_ie"))
+				if(y.has("id_ie")) {
 					ie = y.getJSONObject("id_ie");
-				
-				if(prev == 0) {
-					prev_country = c.getString("country_name");
-					prev = 1;
-				}
-				
-				if(!prev_country.equals(c.getString("country_name"))) {
-					country_result.put("AvgTemperature", AvgTemperature/year_selected);
-					country_result.put("AvgPrecipitation", AvgPrecipitation/year_selected);
-					country_result.put("Import", AvgImport/year_selected);
-					country_result.put("Country", prev_country);
 					
-					result.put(i, country_result);
-					i++;
-					AvgTemperature = 0.0;
-					AvgPrecipitation = 0.0;
-					AvgImport = 0.0;
+					if(prev == 0) {
+						prev_country = c.getString("country_name");
+						prev = 1;
+					}
+					
+					if(!prev_country.equals(c.getString("country_name"))) {
+						if(AvgImport != 0.0) {
+							country_result.put("AvgTemperature", AvgTemperature/year_selected);
+							country_result.put("AvgPrecipitation", AvgPrecipitation/year_selected);
+							country_result.put("Import", AvgImport/year_selected);
+							country_result.put("Country", prev_country);
+						
+							result.put(i, country_result);
+							i++;
+						}
+						AvgTemperature = 0.0;
+						AvgPrecipitation = 0.0;
+						AvgImport = 0.0;
 
-					prev_country = c.getString("country_name");
-				}
-				
-				if(y.has("rainfall_avg"))
-					if(!y.get("rainfall_avg").toString().equals("null"))
-						AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
-				
-				if(y.has("temperature_avg"))
-					if(!y.get("temperature_avg").toString().equals("null"))
-						AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
-				
-				if(ie != null) {
+						prev_country = c.getString("country_name");
+					}
+					
+					if(y.has("rainfall_avg"))
+						if(!y.get("rainfall_avg").toString().equals("null"))
+							AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
+					
+					if(y.has("temperature_avg"))
+						if(!y.get("temperature_avg").toString().equals("null"))
+							AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
+					
 					document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
-					if (document == null) {
-					    //Document does not exist
-					} else {
+					if (document != null) {
 						JSONObject d = new JSONObject(document.toJson());
-						if(d.has("import_qty"))
+						
+						if(d.has("import_qty") && d.getInt("import_qty") != 0)
 							AvgImport += Double.parseDouble(d.get("import_qty").toString());
 					}
 				}
 			}
-			country_result.put("AvgTemperature", AvgTemperature/year_selected);
-			country_result.put("AvgPrecipitation", AvgPrecipitation/year_selected);
-			country_result.put("Import", AvgImport/year_selected);
-			country_result.put("Country", prev_country);
-			
-			result.put(i, country_result);
+			if(AvgImport != 0.0) {
+				country_result.put("AvgTemperature", AvgTemperature/year_selected);
+				country_result.put("AvgPrecipitation", AvgPrecipitation/year_selected);
+				country_result.put("Import", AvgImport/year_selected);
+				country_result.put("Country", prev_country);
+				
+				result.put(i, country_result);
+			}
 		} finally {
 			cursor.close();
 		}
@@ -847,41 +847,35 @@ public class MongoHandler {
 				JSONObject c = obj.getJSONObject("countries");
 				JSONObject y = c.getJSONObject("years");
 				JSONObject ie = null;
-				if(y.has("id_ie"))
+				if(y.has("id_ie")) {
 					ie = y.getJSONObject("id_ie");
-				
-				if(y.has("temperature_avg"))
-					if(y.get("temperature_avg").toString().equals("null"))
-						country_result.put("AvgTemperature", 0.0);
-					else
-						country_result.put("AvgTemperature", y.get("temperature_avg"));
-				
-				if(y.has("rainfall_avg"))
-					if(y.get("rainfall_avg").toString().equals("null"))
-						country_result.put("AvgPrecipitation", 0.0);
-					else
-						country_result.put("AvgPrecipitation", y.get("rainfall_avg"));
-				country_result.put("Year", y.getInt("year"));
-				country_result.put("Country", c.getString("country_name"));
-												
-				Document document = null;
-				if(ie != null) {
-					document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
-					if (document == null) {
-					    //Document does not exist
-					} else {
+					
+					Document document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
+					if (document != null) {
 						JSONObject d = new JSONObject(document.toJson());
-						if(d.has("export_qty"))
+						if(d.has("export_qty") && d.getInt("export_qty") != 0) {
+							System.out.println(d.getInt("export_qty"));
 							country_result.put("Export", d.get("export_qty"));
-						else
-							country_result.put("Export", 0);
+							
+							if(y.has("temperature_avg"))
+								if(y.get("temperature_avg").toString().equals("null"))
+									country_result.put("AvgTemperature", 0.0);
+								else
+									country_result.put("AvgTemperature", y.get("temperature_avg"));
+							
+							if(y.has("rainfall_avg"))
+								if(y.get("rainfall_avg").toString().equals("null"))
+									country_result.put("AvgPrecipitation", 0.0);
+								else
+									country_result.put("AvgPrecipitation", y.get("rainfall_avg"));
+							country_result.put("Year", y.getInt("year"));
+							country_result.put("Country", c.getString("country_name"));
+							
+							result.put(i, country_result);
+							i++;
+						}
 					}
 				}
-				else
-					country_result.put("Import", 0);
-				
-				result.put(i, country_result);
-				i++;
 			}
 		} finally {
 			cursor.close();
@@ -933,55 +927,56 @@ public class MongoHandler {
 				JSONObject c = obj.getJSONObject("countries");
 				JSONObject y = c.getJSONObject("years");
 				JSONObject ie = null;
-				if(y.has("id_ie"))
+				if(y.has("id_ie")) {
 					ie = y.getJSONObject("id_ie");
-				
-				if(prev == 0) {
-					prev_country = c.getString("country_name");
-					prev = 1;
-				}
-				
-				if(!prev_country.equals(c.getString("country_name"))) {
-					country_result.put("AvgTemperature", AvgTemperature/year_selected);
-					country_result.put("AvgPrecipitation", AvgPrecipitation/year_selected);
-					country_result.put("Export", TotalExport);
-					country_result.put("Country", prev_country);
 					
-					result.put(i, country_result);
-					i++;
-					AvgTemperature = 0.0;
-					AvgPrecipitation = 0.0;
-					TotalExport = 0.0;
+					if(prev == 0) {
+						prev_country = c.getString("country_name");
+						prev = 1;
+					}
+					
+					if(!prev_country.equals(c.getString("country_name"))) {
+						if(TotalExport != 0.0) {
+							country_result.put("AvgTemperature", AvgTemperature/year_selected);
+							country_result.put("AvgPrecipitation", AvgPrecipitation/year_selected);
+							country_result.put("Export", TotalExport);
+							country_result.put("Country", prev_country);
+							
+							result.put(i, country_result);
+							i++;
+						}
+						AvgTemperature = 0.0;
+						AvgPrecipitation = 0.0;
+						TotalExport = 0.0;
 
-					prev_country = c.getString("country_name");
-				}
-				
-				if(y.has("rainfall_avg"))
-					if(!y.get("rainfall_avg").toString().equals("null"))
-						AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
-				
-				if(y.has("temperature_avg"))
-					if(!y.get("temperature_avg").toString().equals("null"))
-						AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
-				
-				if(ie != null) {
+						prev_country = c.getString("country_name");
+					}
+					
+					if(y.has("rainfall_avg"))
+						if(!y.get("rainfall_avg").toString().equals("null"))
+							AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
+					
+					if(y.has("temperature_avg"))
+						if(!y.get("temperature_avg").toString().equals("null"))
+							AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
+					
 					document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
-					if (document == null) {
-					    //Document does not exist
-					} else {
+					if (document != null) {
 						JSONObject d = new JSONObject(document.toJson());
 						
-						if(d.has("export_qty"))
+						if(d.has("export_qty") && d.getInt("export_qty") != 0)
 							TotalExport +=  Double.parseDouble(d.get("export_qty").toString());
 					}
 				}
 			}
-			country_result.put("AvgTemperature", AvgTemperature/year_selected);
-			country_result.put("AvgPrecipitation", AvgPrecipitation/year_selected);
-			country_result.put("Export", TotalExport);
-			country_result.put("Country", prev_country);
-			
-			result.put(i, country_result);
+			if(TotalExport != 0.0) {
+				country_result.put("AvgTemperature", AvgTemperature/year_selected);
+				country_result.put("AvgPrecipitation", AvgPrecipitation/year_selected);
+				country_result.put("Export", TotalExport);
+				country_result.put("Country", prev_country);
+				
+				result.put(i, country_result);
+			}
 		} finally {
 			cursor.close();
 		}
@@ -1064,53 +1059,55 @@ public class MongoHandler {
 				JSONObject c = obj.getJSONObject("countries");
 				JSONObject y = c.getJSONObject("years");
 				JSONObject ie = null;
-				if(y.has("id_ie"))
+				if(y.has("id_ie")) {
 					ie = y.getJSONObject("id_ie");
 				
-				if(prev == 0) {
-					prev_country = c.getString("country_name");
-					prev = 1;
-				}
-				
-				if(!prev_country.equals(c.getString("country_name"))) {
-					country_result.put("AvgTemperature", AvgTemperature/year_selected);
-					country_result.put("AvgPrecipitation", AvgPrecipitation/year_selected);
-					country_result.put("Export", AvgExport/year_selected);
-					country_result.put("Country", prev_country);
+					if(prev == 0) {
+						prev_country = c.getString("country_name");
+						prev = 1;
+					}
 					
-					result.put(i, country_result);
-					i++;
-					AvgTemperature = 0.0;
-					AvgPrecipitation = 0.0;
-					AvgExport = 0.0;
-
-					prev_country = c.getString("country_name");
-				}
-				
-				
-				if(y.has("rainfall_avg"))
-					if(!y.get("rainfall_avg").toString().equals("null"))
-						AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
-				
-				if(y.has("temperature_avg"))
-					if(!y.get("temperature_avg").toString().equals("null"))
-						AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
-				
-				if(ie != null) {
+					if(!prev_country.equals(c.getString("country_name"))) {
+						if(AvgExport != 0.0) {
+							country_result.put("AvgTemperature", AvgTemperature/year_selected);
+							country_result.put("AvgPrecipitation", AvgPrecipitation/year_selected);
+							country_result.put("Export", AvgExport/year_selected);
+							country_result.put("Country", prev_country);
+							
+							result.put(i, country_result);
+							i++;
+						}
+						AvgTemperature = 0.0;
+						AvgPrecipitation = 0.0;
+						AvgExport = 0.0;
+	
+						prev_country = c.getString("country_name");
+					}
+					
+					
+					if(y.has("rainfall_avg"))
+						if(!y.get("rainfall_avg").toString().equals("null"))
+							AvgPrecipitation += Double.parseDouble(y.get("rainfall_avg").toString());
+					
+					if(y.has("temperature_avg"))
+						if(!y.get("temperature_avg").toString().equals("null"))
+							AvgTemperature += Double.parseDouble(y.get("temperature_avg").toString());
+					
 					document = ie_collection.find(Filters.eq("_id", new ObjectId(ie.get("$oid").toString()))).first();
-					if (document == null) {
-					    //Document does not exist
-					} else {
+					if (document != null) {
 						JSONObject d = new JSONObject(document.toJson());
-						if(d.has("export_qty"))
+						
+						if(d.has("export_qty") && d.getInt("export_qty") != 0)
 							AvgExport +=  Double.parseDouble(d.get("export_qty").toString());
 					}
 				}
 			}
-			country_result.put("AvgTemperature", AvgTemperature/year_selected);
-			country_result.put("AvgPrecipitation", AvgPrecipitation/year_selected);
-			country_result.put("Import", AvgExport/year_selected);
-			country_result.put("Country", prev_country);
+			if(AvgExport != 0.0) {
+				country_result.put("AvgTemperature", AvgTemperature/year_selected);
+				country_result.put("AvgPrecipitation", AvgPrecipitation/year_selected);
+				country_result.put("Import", AvgExport/year_selected);
+				country_result.put("Country", prev_country);
+			}
 			
 		} finally {
 			cursor.close();
