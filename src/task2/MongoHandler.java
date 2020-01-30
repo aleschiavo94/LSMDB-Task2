@@ -18,6 +18,7 @@ import org.bson.types.ObjectId;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.WriteConcern;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -49,7 +50,7 @@ public class MongoHandler {
 	
 	public static void startMongo() {
 		System.out.println("start MongoDB");
-		mongoClient=MongoClients.create("mongodb://localhost:27017");
+		mongoClient=MongoClients.create("mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=Replicas");
 		db = mongoClient.getDatabase("test");
 		
 	}
@@ -145,7 +146,10 @@ public class MongoHandler {
 	}
 	
 	public static void insertUser(User u){
-		collection = db.getCollection("users");
+		collection = db.getCollection("users").withWriteConcern(WriteConcern.MAJORITY);
+		Document concern = new Document();
+		concern.append("w", "majority");
+		concern.append("wtimeout", 5000);
 		
 		Document doc = new Document();
 		
@@ -157,12 +161,11 @@ public class MongoHandler {
 		doc.append("email", u.getEmail());
 		doc.append("number", u.getNumber());
 		doc.append("core_business", u.getCoreBusiness());
-		
 		collection.insertOne(doc);
 	}
 	
 	public static void deleteAccountByUsername(String username) {
-		collection = db.getCollection("users");
+		collection = db.getCollection("users").withWriteConcern(WriteConcern.MAJORITY);
 		
 		DeleteResult result = collection.deleteOne(Filters.eq("username", username));
 		System.out.println(result);
@@ -195,7 +198,7 @@ public class MongoHandler {
 		Document query = null;
 		Document push_element = null;
 		
-		ie_collection = db.getCollection("impExpInfo");
+		ie_collection = db.getCollection("impExpInfo").withWriteConcern(WriteConcern.MAJORITY);
 		
 		//inserisco l'import e l'export
 		Document imp_exp = new Document();
@@ -213,7 +216,7 @@ public class MongoHandler {
 		ie_collection.insertOne(imp_exp);
 		ObjectId id_ie = imp_exp.getObjectId("_id");
 		
-		collection = db.getCollection("dataModelArrAvg");
+		collection = db.getCollection("dataModelArrAvg").withWriteConcern(WriteConcern.MAJORITY);
 		//controllo se esiste lo stato tra gli stati di quel food		
 		Bson filters = Filters.and(Filters.eq("name", json.getString("name")), Filters.eq("countries.country_name", json.getString("country_name")));
 		Document document = collection.find(filters).first();

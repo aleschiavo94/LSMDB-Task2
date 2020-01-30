@@ -63,6 +63,7 @@ public class DocumentController implements Initializable {
 		private String search = null;
 		private String aggregation_selected = null;
 		
+		private List<String> list_food;
 			
 	public void submit() throws IOException{
 		//getting the values
@@ -241,11 +242,14 @@ public class DocumentController implements Initializable {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(resource));
         
+        
         Parent root;
 		try {
 			root = (Parent) loader.load();
 			scene = new Scene(root);
 	        dialogStage.setTitle("Registration");
+	        RegistrationController controller = loader.getController();
+	        controller.init(list_food);
 	        dialogStage.initModality(Modality.APPLICATION_MODAL);
 	        dialogStage.setScene(scene);
 	        dialogStage.show();
@@ -253,7 +257,7 @@ public class DocumentController implements Initializable {
 			e.printStackTrace();
 		}
         		
-        RegistrationController controller = loader.getController();
+        
 	}
 	
 	public void login() {
@@ -283,7 +287,7 @@ public class DocumentController implements Initializable {
 	//Utility function used to fill the food combobox
 	private void setFoodList() {
 		System.out.println("start getFood()");
-		List<String> list_food = new ArrayList<String>();
+		list_food = new ArrayList<String>();
 		list_food.addAll(MongoHandler.getFood());
 		System.out.println("end getFood()");
 		food_list = FXCollections.observableList(list_food);

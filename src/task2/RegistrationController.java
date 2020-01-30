@@ -96,11 +96,11 @@ public class RegistrationController implements Initializable {
 	}
 	
 	//Utility function used to fill the food combobox
-	private void setFoodList() {
-		System.out.println("start getFood()");
-		List<String> list_food = new ArrayList<String>();
-		list_food.addAll(MongoHandler.getFood());
-		System.out.println("end getFood()");
+	private void setFoodList(List<String> list_food) {
+		//System.out.println("start getFood()");
+		//List<String> list_food = new ArrayList<String>();
+		//list_food.addAll(MongoHandler.getFood());
+		//System.out.println("end getFood()");
 		food_list = FXCollections.observableList(list_food);
 		business_field.setItems(food_list);
 	}
@@ -108,7 +108,7 @@ public class RegistrationController implements Initializable {
 	@Override
 	 public void initialize(URL url, ResourceBundle rb) {
 		
-		List<String> list = new ArrayList<String>();
+		/*List<String> list = new ArrayList<String>();
 		list.add("Wait...");
 		food_list = FXCollections.observableList(list); //MongoHandler.getFood());
 		business_field.setItems(food_list);
@@ -116,11 +116,15 @@ public class RegistrationController implements Initializable {
 		new Thread(() -> {
 	        try {
 	            Thread.sleep(10);
-	            setFoodList();
+	            
 	        }
 	        catch (Exception e){
 	            System.err.println(e);
 	        }
-	    }).start();
+	    }).start();*/
+	}
+	
+	public void init(List<String> list_food) {
+		setFoodList(list_food);
 	}
 }
