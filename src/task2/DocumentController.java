@@ -101,8 +101,10 @@ public class DocumentController implements Initializable {
 			radio_selected = selected.getText();
 			start_year = start_date.getText();
 			end_year = end_date.getText();
-			if(search_field.getLength() > 0)
+			if(search_field.getLength() > 0) {
 				search = search_field.getText();
+				search = search.substring(0,1).toUpperCase() + search.substring(1).toLowerCase();
+			}
 			else
 				search = null;
 			aggregation_selected = aggregation.getSelectionModel().getSelectedItem().toString();
@@ -150,50 +152,38 @@ public class DocumentController implements Initializable {
 		}
 		else if(radio_selected.equals("Import")) {
 			if(aggregation_selected.equals("Sum")) {
-				if(region_selected != null && search == null)
-					result = MongoHandler.getTotalRegionImport(food_selected,region_selected,start_year,end_year,false);
-				else
-					result = MongoHandler.getTotalCountryImport(food_selected,search,start_year,end_year);
+				result = MongoHandler.getTotalImport(food_selected,search,region_selected,start_year,end_year);
 				System.out.println(result);
 				parameterLabel = "Total Import (tonnes)";
 				objectiveLabel = "Total Import Value: ";
 			}
 			else if(aggregation_selected.contentEquals("Average")) {
-				if(region_selected != null && search == null)
-					result = MongoHandler.getAverageRegionImport(food_selected,region_selected,start_year,end_year);
-				else
-					result = MongoHandler.getTotalCountryImport(food_selected,search,start_year,end_year);
+				result = MongoHandler.getAverageImport(food_selected,search,region_selected,start_year,end_year);
 				System.out.println(result);
 				parameterLabel = "AVG Import (tonnes)";
 				objectiveLabel = "Avg Yearly Import: ";
 			}
 			else if(aggregation_selected.contentEquals("Top 5")) {
-				result = MongoHandler.getTotalRegionExport(food_selected,region_selected,start_year,end_year,true);
+				result = MongoHandler.getTop5Import(food_selected,region_selected,start_year,end_year);
 				parameterLabel = "Top 5 Import (tonnes)";
 				objectiveLabel = "Total Import Value: ";
 			}
 		}
 		else if(radio_selected.equals("Export")) {
 			if(aggregation_selected.equals("Sum")) {
-				if(region_selected != null && search == null)
-					result = MongoHandler.getTotalRegionExport(food_selected,region_selected,start_year,end_year,false);
-				else
-					result = MongoHandler.getTotalCountryExport(food_selected,search,start_year,end_year);
+				result = MongoHandler.getTotalExport(food_selected,search,region_selected,start_year,end_year);
 				System.out.println(result);
 				parameterLabel = "Total Export (tonnes)";
 				objectiveLabel = "Total Export Value: ";
 			}
 			else if(aggregation_selected.contentEquals("Average")) {
-				if(region_selected != null && search == null)
-					result = MongoHandler.getAverageRegionExport(food_selected,region_selected,start_year,end_year);
-				else
-					result = MongoHandler.getTotalCountryExport(food_selected,search,start_year,end_year);
+				result = MongoHandler.getAverageExport(food_selected,search,region_selected,start_year,end_year);
 				System.out.println(result);
 				parameterLabel = "AVG Export (tonnes)";
 				objectiveLabel = "Avg Yearly Export: ";
 			}
 			else if(aggregation_selected.contentEquals("Top 5")) {
-				result = MongoHandler.getTotalRegionExport(food_selected,region_selected,start_year,end_year,true);
+				result = MongoHandler.getTop5Export(food_selected,region_selected,start_year,end_year);
 				parameterLabel = "Top 5 Export (tonnes)";
 				objectiveLabel = "Total Export Value: ";
 			}

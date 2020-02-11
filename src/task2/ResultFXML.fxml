@@ -12,7 +12,7 @@
 
 <ScrollPane prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="task2.ResultController">
    <content>
-      <Pane prefHeight="2500.0" prefWidth="1200.0" style="-fx-background-image: url(&quot;world-background2.png&quot;);">
+      <Pane prefHeight="2500.0" prefWidth="1200.0" style="-fx-background-image: url(&quot;result_background.png&quot;);">
          <children>
             <Label fx:id="title" layoutX="16.0" layoutY="14.0" prefHeight="51.0" prefWidth="1169.0" textAlignment="CENTER">
                <font>
