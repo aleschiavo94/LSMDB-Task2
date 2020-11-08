@@ -40,4 +40,4 @@ data to the application database.
 The application is based on a document database in MongoDB.
 To manage the data stored in the database, the application uses the MongoDB
 Java Drive that allows to interact with it employing Java Application.
-![Use case image](https://github.com/elenaveltroni/Task2/blob/master/SoftwareArchitecture.png?raw=true)
+![Software architecture image](https://github.com/elenaveltroni/Task2/blob/master/ArchitectureSchema.png?raw=true)
